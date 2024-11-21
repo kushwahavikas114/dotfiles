@@ -1,0 +1,51 @@
+# You can add comments to these files with #
+cac	${XDG_CACHE_HOME:-$HOME/.cache}
+cg	${XDG_CONFIG_HOME:-$HOME/.config}
+lsh	${XDG_DATA_DIR:-$HOME/.local/share}
+vnv	${XDG_DATA_DIR:-$HOME/.local/share}/virtualenvs
+lsr	${XDG_DATA_DIR:-$HOME/.local/src}
+lst	${XDG_DATA_DIR:-$HOME/.local/state}
+dn	${XDG_DOWNLOAD_DIR:-$HOME/Downloads}
+dx	${XDG_DOCUMENTS_DIR:-$HOME/Documents}
+dl	${XDG_DOCUMENTS_DIR:-$HOME/Documents}/latex
+nt	${XDG_DOCUMENTS_DIR:-$HOME/Documents}/Notes
+ms	${XDG_MUSIC_DIR:-$HOME/Music}
+px	${XDG_PICTURES_DIR:-$HOME/Pictures}
+vd	${XDG_VIDEOS_DIR:-$HOME/Videos}
+
+lb	~/.local/bin
+bn	~/bin
+sd	~/sdcard
+rp	~/repos
+ap	~/Applications
+ad	~/Arduino
+dv	~/Dev
+cm	~/Dev/cloud-maker
+cs	~/Dev/sites/csstudent41.github.io
+vr	~/Dev/sites/vikas.rocks
+vrc	~/Dev/sites/vikas.rocks/content
+vrl	~/Dev/sites/vikas.rocks/layouts
+vrp	~/Dev/sites/vikas.rocks/public
+td	~/Dev/test
+gd	~/GDrive/vartak/CS
+gf	~/GDrive/vartak/CS/practical-files/sem5
+gp	~/GDrive/vartak/CS/practical-notes/sem5
+gz	~/GDrive/vartak/CS/practical-zip/sem5
+gn	~/GDrive/vartak/CS/notes/sem5
+rs	~/GDrive/vartak/results
+ph	~/Phone
+stv	~/Phone/.stversions
+pw	~/Phone/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp\ Documents
+
+mn	/mnt
+stg	${STORAGE:-/mnt/storage}
+lr	${STORAGE:-/mnt/storage}/Library
+med	${STORAGE:-/mnt/storage}/Media
+sts	${STORAGE:-/mnt/storage}/sites
+sd	/sdcard
+mp	/run/media/$USER/
+mtp	/run/user/1000/gvfs
+usr	${PREFIX:-/usr}
+ush	/usr/share
+usd	/usr/share/doc
+usha	/usr/share/applications

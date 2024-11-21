@@ -1,0 +1,99 @@
+#!/bin/sh
+
+help() { echo "help - get help for shell commands or programs
+
+USAGE:
+	help [OPTION...] <QUERY>
+
+OPTIONS:
+	-a  show all available help
+	-h  show this help message
+	"; }
+
+while getopts 'avh' o; do case "$o" in
+	a) aflag=0;;
+	h) help; exit ;;
+	*) printf "help: invalid option -- '%s'" "$OPTARG" ;;
+esac done
+shift $((OPTIND - 1))
+
+[ "$#" -lt 1 ] && help >&2 && exit 2
+
+
+##############################################################
+###    H E L P    F U N C T I O N S    I N    O R D E R    ###
+##############################################################
+
+man_query() {
+  man -w "$query" >/dev/null 2>&1 || return 2
+  man -a "$query"
+}
+
+info_query() {
+	# if command -v info
+  [ -n "$(info --where "$query")" ] || return 2
+  info --vi-keys --all "$query"
+}
+
+show_script() {
+  file="$(which "$query" 2>/dev/null)" || return 2
+  "${PAGER:-less}" "$file"
+}
+
+cmd_help() {
+	if content="$($query -h 2>/dev/null)"; then
+		printf "$ %s -h" "$query"
+  elif content="$($query --help 2>/dev/null)"; then
+		printf "$ %s --help" "$query"
+	else
+		return 2
+	fi
+	printf '\n%s\n' "$content" | "${PAGER:-less}" -X
+	echo
+}
+
+tldr_query() {
+  content="$(tldr --color=always "$query" 2>/dev/null)" || return 2
+  printf "\n$ tldr '%s'\n%s\n\n" "$query" "$content" | "${PAGER:-less}" -X
+}
+
+pkg_info() {
+	if command -v pacman >/dev/null; then
+		cmd="$ pacman -Si $query"
+		info="$(pacman -Si "$query" 2>/dev/null)" || return 2
+	elif command -v apt >/dev/null; then
+		cmd="$ apt show $query"
+		info="$(apt show "$query" 2>/dev/null)" || return 2
+	elif command -v pkg >/dev/null; then
+		cmd="$ pkg info $query"
+		info="$(pkg info "$query" 2>/dev/null)" || return 2
+	else
+		return
+	fi
+	[ -z "$info" ] && return 2
+  printf "\n%s\n%s\n\n" "$cmd" "$info" | "${PAGER:-less}" -X
+}
+
+##########################################################
+###    E N D    O F    H E L P    F U N C T I O N S    ###
+##########################################################
+
+
+help_funcs="$(sed -ne "/^###    H E L P/,/^###    E N D/ s/^\([a-zA-Z0-9_]\+\)\(\).*/\1/p" "$0")"
+main() {
+	if [ "$aflag" = 0 ]; then
+		eval "$help_funcs"
+	else
+		eval "$(echo "$help_funcs" | sed -z 's/\n/||/g' | sed 's/||$//')"
+	fi
+}
+
+query="$*"
+[ -f "$query" ] && { "${PAGER:-less}" "$query"; exit 0; }
+[ -d "$query" ] &&
+	{ ls -AlFh --color --group-directories-first -- "$query"; exit 0; }
+
+command -V "$query" 2>/dev/null && { echo; export HELP_FOUND=1; }
+
+main || [ "$HELP_FOUND" = 1 ] ||
+	{ echo "No help found for '$query'" >&2; exit 2; }

@@ -1,0 +1,36 @@
+#!/bin/sh
+
+displays="$(xrandr | grep "^\S* connected" | cut -d\  -f1)"
+display_count="$(echo "$displays" | wc -l)"
+
+[ "$display_count" -gt 2 ] &&
+	{ echo "Too many displays to configure" >&2; exit 1; }
+
+set --
+
+
+if [ "$display_count" = 2 ]; then
+
+	for display in $displays; do
+		case "$display" in
+			eDP*) export PRIMARY="$display"; set -- "$@" --output "$display" --mode 1920x1080 --primary --pos 0x270 ;;
+			HDMI*) set -- "$@" --output "$display" --mode 1920x1080 --pos 1920x0 --scale "1.25x1.25" ;;
+		esac
+	done
+
+else
+
+	for display in $displays; do
+		case "$display" in
+			eDP*) set -- "$@" --output "$display" --primary --mode 1920x1080 --scale "1.1x1.1" ;;
+			HDMI*) set -- "$@" --output "$display" --mode 1366x768 --scale "1.25x1.25" ;;
+			LVDS*) set -- "$@" --output "$display" --primary ;;
+			DP*) set -- "$@" --output "$display" --primary --scale "1.1x1.1" ;;
+		esac
+	done
+
+fi
+
+
+eval "xrandr --auto $*"
+

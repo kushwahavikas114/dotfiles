@@ -1,0 +1,4 @@
+#!/bin/sh
+
+unset PYTHONSTARTUP
+"${XDG_DATA_HOME:-$HOME/.local/share}/virtualenvs/main/bin/ipython" "$@"

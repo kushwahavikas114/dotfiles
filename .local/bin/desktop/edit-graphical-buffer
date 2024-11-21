@@ -1,0 +1,17 @@
+#!/bin/sh
+
+sleep 0.5
+xdotool key --clearmodifiers ctrl+a ctrl+c
+content="$(xclip -o -sel clipboard)"
+
+tempfile=/tmp/scratch-buffer/$$.txt
+mkdir -pv /tmp/scratch-buffer
+echo "$content" | tee "$tempfile" > "$tempfile.bak"
+${TERMINAL:-xdg-terminal-exec} -c dropdown_buffer -e nvim "$tempfile"
+
+diff "$tempfile" "$tempfile.bak" >/dev/null || {
+	xclip -sel clipboard < "$tempfile"
+	xdotool key --clearmodifiers ctrl+a ctrl+v
+}
+
+rm -f "$tempfile" "$tempfile.bak"

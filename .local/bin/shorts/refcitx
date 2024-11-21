@@ -1,0 +1,6 @@
+#!/bin/sh
+
+fcitx
+sleep 0.1
+remap
+

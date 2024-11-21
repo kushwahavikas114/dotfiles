@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# gui -e
+
+echo "Sourced: $(date)" >> ~/.local/state/xprofile.logs
+
+xrdb "${XDG_CONFIG_HOME:-$HOME/.config}/X11/Xresources" & xrdbpid=$!
+numlockx on &
+setdp &
+
+autostart="copyq dunst pipewire syncthing remapd"
+
+for program in $autostart; do
+	pidof -sx "$program" || "$program" &
+done >/dev/null 2>&1
+
+{ sleep 5; wireplumber; } &
+[ -n "$xrdbpid" ] && wait "$xrdbpid"

@@ -1,0 +1,5 @@
+[user]
+	email = dev@vikas.rocks
+	name = Vikas Kushwaha
+[init]
+	defaultBranch = master

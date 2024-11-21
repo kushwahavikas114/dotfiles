@@ -1,0 +1,11 @@
+#!/bin/sh
+
+chosen=$(cat ~/.local/share/chars/* | dmenu -i -l 25 -fn :size=20)
+
+[ -z "$chosen" ] && exit
+
+if [ -n "$1" ]; then
+	printf "%s" "${chosen#* }" | cut -d\; -f1 | tr -d '\n' | xclip -selection clipboard
+else
+	printf "%s" "${chosen%% *}" | xclip -selection clipboard
+fi

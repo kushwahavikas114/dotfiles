@@ -1,0 +1,21 @@
+#!/bin/zsh
+. ~/.profile
+
+[ -n "$TMUX" ] || [ -n "$TERMUX_VERSION" ] || [ "$SSH_CONNECTION" ] &&
+	return
+
+on_ac_power="$(cat /sys/class/power_supply/ACAD/online)"
+[ "$on_ac_power" = 0 ] && brightnessctl set 5% || brightnessctl set 20%
+
+case "$TTY" in
+	/dev/tty1)
+		[ "$on_ac_power" = 1 ] && {
+			echo "Waiting for nvidia card to load up..."
+			until [ -e /dev/dri/card0 ]; do; sleep 0.1; done
+		}
+		command -V startx >/dev/null && { pgrep startx || startx }
+		;;
+	/dev/tty3) tmux new -s master ;;
+	/dev/tty[2-5]) tmux new -s "${TTY#/dev/}" ;;
+	# /dev/pts/*) exec tmux new -s "${TTY#/dev/}" ;;
+esac

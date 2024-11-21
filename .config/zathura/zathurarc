@@ -1,0 +1,10 @@
+map u scroll half-up
+map d scroll half-down
+map D toggle_page_mode
+
+map > rotate rotate-cw
+map < rotate rotate-ccw
+
+set selection-notification false
+set selection-clipboard clipboard
+set font 'monospace normal 14'

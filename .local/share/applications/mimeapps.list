@@ -1,0 +1,25 @@
+[Default Applications]
+application/octet-stream=text.desktop
+application/pdf=pdf.desktop
+application/pdf=pdf.desktop
+application/x-gettext-translation=text.desktop
+application/xml=text.desktop
+application/x-wine-extension-ini=text.desktop
+image/gif=img.desktop
+image/gif=img.desktop
+image/jpeg=img.desktop
+image/png=img.desktop
+text/plain=text.desktop
+video/mp4=video.desktop
+video/ogg=video.desktop
+video/x-flv=video.desktop
+video/x-ms-wmv=video.desktop
+video/x-ogm+ogg=video.desktop
+video/x-theora+ogg=video.desktop
+inode/directory=file.desktop
+x-scheme-handler/http=browser.desktop
+x-scheme-handler/https=browser.desktop
+x-scheme-handler/etcher=balena-etcher-electron.desktop
+text/html=browser.desktop
+x-scheme-handler/about=browser.desktop
+x-scheme-handler/unknown=browser.desktop

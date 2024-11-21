@@ -1,0 +1,12 @@
+#!/bin/sh
+
+# python-help: get help for keywords in python
+
+[ -x "${XDG_DATA_HOME:-$HOME/.local/share}/virtualenvs/main/bin/python" ] &&
+	alias python="${XDG_DATA_HOME:-$HOME/.local/share}/virtualenvs/main/bin/python"
+
+if [ "$#" -gt 0 ]; then
+	python -c "help('$*')"
+else
+	python -c "help()"
+fi

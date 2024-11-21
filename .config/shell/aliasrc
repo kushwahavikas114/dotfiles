@@ -1,0 +1,85 @@
+#!/bin/sh
+
+# Common operations
+alias xx='chmod u+x'
+alias x-='chmod -x'
+alias th='touch'
+alias md='mkdir'
+alias s='sudo'
+alias l='ls -A'
+alias ll='ls -al'
+# open
+alias o='${OPENER:-xdg-open}'
+alias e='${EDITOR:-vi}'
+alias se='sudoedit'
+alias lf='lfcd'
+alias rs='exec $SHELL'
+alias sr='e "$(ff -L ~/.config ~/.local/bin ~/bin)"'
+alias fh='fzf --tac < "${XDG_DATA_HOME:-$HOME/.local/share}/openhist"'
+
+alias uc='cd ~ && gitpush'
+
+lt() { tree -aC "$@" | less -rF; }
+dul() { du -ahd 1 "$@" | sort -h | less -FX; }
+v() { LESSOPEN="|preview %s" less -r -F "${1:-.}"; }
+ff() { find "$@" ! -wholename '*.git*' \( -type d -printf '%p/\n' , ! -type d -print \) |
+	FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $fo" fzf -m; }
+senv() { source "${XDG_DATA_HOME:-$HOME/.local/share}/virtualenvs/${1:-main}/bin/activate"; }
+
+sudoedit() {
+	if command -V vim >/dev/null; then
+		[ -f "$HOME/.vim/vimrc" ] && VIMRC="$HOME/.vim/vimrc"
+		sudo vim -u "${VIMRC:-$HOME/.vimrc}" "$@"
+	elif command -V nvim >/dev/null; then
+		sudo nvim -u "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/init.vim" "$@"
+	else
+		command sudoedit "$@"
+	fi
+}
+
+lfcd () {
+	[ $# -gt 0 ] && [ -z "$1" ] && return 2
+	# cd "$(command lf -print-last-dir "$@")"
+
+	tmp="$(mktemp)"
+	command lf -last-dir-path="$tmp" "$@"
+	if [ -f "$tmp" ]; then
+		dir="$(cat "$tmp")"
+		rm -f "$tmp"
+		[ -d "$dir" ] || return
+		[ "$dir" != "$PWD" ] || return
+		cd "$dir"
+	fi
+}
+
+# Dirs
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias .....='cd ../../../..'
+alias ......='cd ../../../../..'
+
+alias 1='pushd -1'
+alias 2='pushd -2'
+alias 3='pushd -3'
+alias 4='pushd -4'
+alias 5='pushd -5'
+alias 6='pushd -6'
+alias 7='pushd -7'
+alias 8='pushd -8'
+alias 9='pushd -9'
+
+## Default options
+alias rm='rm -Iv'
+alias cp='cp -iv'
+alias mv='mv -iv'
+alias du='du -h'
+alias mkdir='mkdir -pv'
+alias watch='watch -c -n 1 '
+alias wget='wget -c'
+alias fzf='fzf --ansi'
+alias diff='diff --color=auto'
+alias grep='grep --color=auto'
+alias tree='tree -C'
+alias ls='ls -h --group-directories-first --color=auto --classify=auto'
+alias info='info --vi-keys --init-file ~/.config/infokey'

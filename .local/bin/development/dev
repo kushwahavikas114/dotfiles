@@ -1,0 +1,179 @@
+#!/bin/sh
+
+err() { [ "$DEV_SUPRESS_ERRORS" = 1 ] ||
+	printf "dev: %s\n" "$@" >&2; exit 5; }
+
+[ "$#" -lt 2 ] && { err "dev - execute action based on file
+USAGE: dev <ACTION> <FILE> [ARGS...]"; }
+
+action="$1"
+file="$2"
+basename="${file##*/}"
+shift 2
+
+[ -e "$file" ] || err "$file: No such file or directory"
+
+# auxilary functions
+findweb() { find "$@" -or -name '*.html'; }
+
+
+
+### #################################################################
+### BEGIN TASKS
+### #################################################################
+
+sh_lint() { shellcheck -x "$file"; }
+sh_run() { $(sed -n '1s|^#!/.*/\(.*\)|\1|p' "$file") "$file" "$@"; }
+zsh_run() { zsh "$file" "$@"; }
+awk_run() { awk -f "$file" "$@"; }
+pl_run() { perl "$file" "$@"; }
+
+md_run() { glow --pager --style dark "$file"; }
+md_test() { pandoc -t pdf "$file" | zathura -; }
+tex_compile() { pdflatex -output-directory="$(dirname "$file")" "$file"; }
+tex_clean() { find "$(dirname "${1}")" -regex \
+	'.*\(_minted.*\|.*\.\(4tc\|xref\|tmp\|pyc\|pyg\|pyo\|fls\|vrb\|fdb_latexmk\|bak\|swp\|aux\|log\|synctex\(busy\)\|lof\|lot\|maf\|idx\|mtc\|mtc0\|nav\|out\|snm\|toc\|bcf\|run\.xml\|synctex\.gz\|blg\|bbl\)\)' -delete; }
+html_format() { tidy -q "$file" 2>/dev/null; }
+html_lint() { tidy -q "$file" >/dev/null; }
+html_run() { w3m "$file"; }
+js_test() { node "$file"; }
+json_format() { jq . "$file"; }
+php_run() { php "$file" "$@"; }
+
+c_compile() { make "${file%.c}"; }
+c_run() { "$(realpath "${file%.c}")" "$@"; }
+c_clean() { rm -v "${file%.c}"; }
+
+go_format() { gofmt "$file"; }
+go_lint() { gofmt -d "$file"; }
+go_compile() { go build "$file"; }
+go_run() { "$(realpath "${file%.go}")" "$@"; }
+go_test() { go run "$file" "$@"; }
+go_serve() { findweb . -name '*.go' | entr -r sh -c "printf '\n\n$ go run *.go\n'; go run *.go"; }
+
+c_test() {
+	out="${file%.c}"
+	# ARGS="$(sed -nE -e 's|.*#include\s*<(.*)>|-l\1|gp' "$file" |
+	# 	paste -d' ' -s)"
+	# echo "$ clang -o $out $file $ARGS"
+	# clang -o "$out" "$file" $ARGS && "$out" "$@"
+	make "$out" && echo && "$(realpath "$out")" "$@"
+}
+
+cpp_test() {
+	out="$(realpath "${file%.cpp}")"
+	if [ -f GNUmakefile ] || [ -f makefile ] || [ -f Makefile ]; then
+		make && "${out%/*}/main" "$@"
+	else
+		g++ -o "$out" "$file" && "$out" "$@"
+	fi
+}
+
+ino_test() {
+	[ -t 1 ] || set -- --no-color
+	if [ -c /dev/ttyACM0 ]; then
+		arduino-cli compile --fqbn arduino:avr:uno "$file" "$@"
+		arduino-cli upload --fqbn arduino:avr:uno --port /dev/ttyACM0 "$file" "$@"
+		if [ -t 1 ]; then
+			picocom /dev/ttyACM0
+		else
+			stty -F /dev/ttyACM0 raw 9600
+			cat /dev/ttyACM0
+		fi
+	else
+		arduino-cli compile --fqbn arduino:avr:uno --output-dir . "$file" "$@"
+		rm -- *.eep *.elf *.bin *.with_bootloader.hex
+	fi
+}
+
+java_test() {
+	if [ -f build.xml ]; then
+		ant
+		build="$(find . -name 'classes' -or -name 'build' | tail -1)"
+		class="$({ cd "$build" &&
+			find . -name "$(basename "$file" .java).class"; } |
+			tail -1 | cut -c 3- | sed 's|.class||g' | tr '/' '.')"
+	else
+		mkdir -pv build
+		build="$(dirname "$file")/build"
+		class="$(basename "$file" .java)"
+		javac -d "$build" "$file"
+	fi
+	java -cp "$build:lib/*" "$class"
+}
+
+kt_test() {
+	out="${file%.*}.jar"
+	bash /opt/android-studio/plugins/Kotlin/kotlinc/bin/kotlinc "$file" -include-runtime -d "$out"
+	java -jar "$out"
+	rm "$out"
+}
+
+py_serve() { findweb . -name '*.py' | entr -r python "$file"; }
+# py_lint() {
+# 	[ -t 1 ] && printf '\033[33m'
+# 	pycodestyle "$file" >&2
+# 	[ -t 1 ] && printf '\033[0;39m'
+# }
+
+py_run() {
+	python "$file" "$@"
+	# if [ -x "${XDG_DATA_HOME:-$HOME/.local/share}/virtualenvs/main/bin/python" ]; then
+	# 	"${XDG_DATA_HOME:-$HOME/.local/share}/virtualenvs/main/bin/python" "$file" "$@"
+	# else
+	# 	python "$file" "$@"
+	# fi
+}
+
+### #################################################################
+### END TASKS
+### #################################################################
+
+
+
+filetype=$(file --brief --mime-type "$file")
+case $filetype in
+	text/x-c)               filetype_ext="c" ;;
+	text/x-script.python)   filetype_ext="py" ;;
+	text/x-shellscript)     filetype_ext="sh" ;;
+	text/html)              filetype_ext="html" ;;
+	application/javascript) filetype_ext="js" ;;
+	text/x-php)             filetype_ext="php" ;;
+	text/x-awk)             filetype_ext="awk" ;;
+esac
+
+if [ "${basename#*.}" != "${basename}" ]; then
+	file_ext="${basename##*.}"
+else
+	[ -z "$filetype_ext" ] && err "no file type association for $filetype"
+	NO_BASENAME=1
+fi
+
+execute_task() {
+	[ "$NO_BASENAME" != 1 ] && {
+		file_task="${file_ext}_${action}"
+		[ "${tasks#*"[$file_task]"}" != "$tasks" ] &&
+			{ $file_task; local ret=$?; local tasked=1; }
+	}
+	[ "$tasked" != 1 ] && {
+		filetype_task="${filetype_ext}_${action}"
+		[ "${tasks#*"[$filetype_task]"}" != "$tasks" ] &&
+			{ $filetype_task; local ret=$?; local tasked=1; }
+	}
+	[ "$tasked" != 1 ] && return 1
+	[ "$ret" != 0 ] && printf "\nshell returned %s\n" "$ret" >&2
+	return 0
+}
+
+tasks="$(sed -n "/^### BEGIN TASKS$/,/^### END TASKS$/ s/\(^[a-zA-Z0-9_]\+\)().*/[\1]/p" "$0")"
+
+if [ "$action" = test ]; then
+	execute_task && exit
+	for action in lint compile run; do
+		execute_task && tested=1
+	done
+	[ "$tested" != 1 ] && err "no tests for .${file_ext:-$filetype_ext} file"
+	exit 0
+fi
+
+execute_task || err "no $action action for .${file_ext:-$filetype_ext} file"

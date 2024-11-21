@@ -1,0 +1,39 @@
+#!/bin/sh
+
+sudo mkdir -p "${MOUNTPATH:=/run/media/$USER}"
+sudo chown "$USER:$USER" "$MOUNTPATH"
+
+makepath() {
+	[ -d "$path" ] && { rmdir "$path" || exit; }
+	mkdir -p "$path"
+}
+
+case "$1" in
+
+	mtp:*)
+		path="$MOUNTPATH/${1#mtp:}"
+		makepath
+		simple-mtpfs "$path"
+		;;
+
+	*:|*:/*)
+		path="$MOUNTPATH/${1%%:*}"
+		makepath
+		if grep -q "^\[${1%:}\]$" "${XDG_CONFIG_HOME:-$HOME/.config}/rclone/rclone.conf"; then
+			rclone mount --daemon "$1" "$path"
+		else
+			sshfs "$1" "$path"
+		fi
+		;;
+
+	*)
+		if sudo cryptsetup isLuks "$1"; then
+			uuid=$(sudo cryptsetup luksUUID "$1" | tr -d -)
+			test -b /dev/disk/by-id/dm-uuid-*$uuid* && exit
+			sudo cryptsetup open "$1" "crypt-$uuid"
+			udisksctl mount -b "/dev/mapper/crypt-$uuid"
+			exit
+		fi
+		udisksctl mount -b "$1"
+		;;
+esac

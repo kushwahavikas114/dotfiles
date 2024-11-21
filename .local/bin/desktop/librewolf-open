@@ -1,0 +1,39 @@
+#!/bin/sh
+
+window="LibreWolf"
+running() { windows=$(wmctrl -l)
+	test "${windows#*"$window"}" != "$windows"; }
+press() { sleep 0.1; xdotool keyup Super
+	xdotool key --clearmodifiers "$@"; }
+
+if ! running; then
+	notify-send "Starting $window..."
+	start="$(date +%s.%3N)"
+	setsid -f librewolf -P "${FFPROFILE:-default-release}"
+	for _ in $(seq 1000); do sleep 0.1; running && break; done
+	end="$(date +%s.%3N)"
+	time="$(echo "$end - $start" | bc)"
+	notify-send "$window" "Started in ${time}s"
+	started=1
+fi
+
+wmctrl -a "$window" ||
+	{ notify-send "ffbrowser" "ERROR: librewolf window not found"; exit 1; }
+[ "$started" = 1 ] || press ctrl+t
+
+query="$*"
+if [ "$query" != "${query#http*://}" ]; then
+	press ctrl+l
+elif [ -e "$query" ]; then
+	query="$(readlink -f "$query")"; press ctrl+l
+else
+	# workaround for ctrl+k not working at initial startup
+	[ "$started" = 1 ] && sleep 0.5
+	press ctrl+k
+fi
+
+if [ -n "$query" ]; then
+	xdotool type "$query"
+	press Return
+fi
+

@@ -1,0 +1,5 @@
+#!/bin/sh
+
+[ "$TERM" != "${TERM#st-256color}" ] && export TERM=xterm-256color
+sshadd "$(find ~/.ssh -name "${1}_id_*" | head -1)"
+ssh "$@" -t "tmux attach -t $USER || tmux new -s $USER"

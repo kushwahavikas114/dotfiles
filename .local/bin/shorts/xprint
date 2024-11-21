@@ -1,0 +1,8 @@
+#!/bin/sh
+
+[ -n "$TERMUX_VERSION" ] && { termux-clipboard-get; exit; }
+
+xclip -out -selection clipboard 2>/dev/null ||
+xclip -out -selection secondry 2>/dev/null ||
+xclip -out -selection primary 2>/dev/null ||
+notify-send "Selection and clipboard is empty"

@@ -1,0 +1,47 @@
+#!/bin/sh
+
+content="${1:-$(xprint | fzf -m --header "Select clipboard lines to send")}" || exit
+host="${2:-$(sed '/^Host \(.*\)/!d; s//\1/' ~/.ssh/config | fzf --header "Send to?")}" || exit
+sshadd "$(find ~/.ssh -name "${host}_id_*" | head -1)"
+[ -z "$NOTIFY" ] && command -V notify-send >/dev/null && NOTIFY=1
+
+notify() {
+	[ "$NOTIFY" = 1 ] && notify-send -r 8529 "$@"
+	printf "%s\n" "$@"
+}
+
+transferto() {
+	notify "Transfering files to $host:$1/" "$content"
+	rsync -PLru --progress "$content" "$host:$1/"
+}
+
+if [ -e "$content" ]; then
+	case "$content" in
+		*.txt|*.pdf) transferto "Documents" ;;
+		*)
+			case "$(file --brief --mime-type "$content")" in
+				text/*) transferto "Documents" ;;
+				image/*) transferto "Pictures" ;;
+				audio/*) transferto "Music" ;;
+				video/*) transferto "Videos" ;;
+				*) transferto "Downloads" ;;
+			esac
+			;;
+	esac
+
+else
+	case "$content" in
+		http*) notify "Opening link in $host" "$content"
+			ssh "$host" "xdg-open \"$content\"" ;;
+		*) notify "Copying in $host's clipboard" "$content"
+			ssh "$host" "termux-clipboard-set \"$content\"" ;;
+	esac
+fi
+
+if [ $? = 0 ]; then
+	notify "  Done (fzf-send)"
+else
+	notify " ❌ Errors Occured (fzf-send)"
+	printf "\n%s" "Press Enter to continue..."
+	read -r
+fi

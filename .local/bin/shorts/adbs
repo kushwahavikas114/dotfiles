@@ -1,0 +1,3 @@
+#!/bin/sh
+
+adb -s "${ADB_DEVICE}" shell "$@"

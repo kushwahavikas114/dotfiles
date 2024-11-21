@@ -1,0 +1,33 @@
+#!/bin/sh
+
+sudo cryptsetup open /dev/sdb1 backup
+sudo mount --mkdir /dev/mapper/backup /mnt/backup
+backup="/mnt/backup/$(hostname)"
+[ -d "$backup" ] ||
+	{ echo "$0: directory doesn't exist: $backup" >&2; exit 1; }
+
+cd ~ || exit
+rsync -Plru --delete \
+	.config \
+	.git \
+	.gnupg \
+	.local \
+	.librewolf \
+	.ssh \
+	bin \
+	DCIM \
+	Dev \
+	Documents \
+	Downloads \
+	GDrive \
+	Music \
+	Phone \
+	Pictures \
+	repos \
+	Videos \
+	"$backup/home/$USER/"
+
+find . -maxdepth 1 \( -type f -o -type l \) -exec rsync -Plu {} "$backup/home/$USER" \;
+
+echo "Backing up /etc directory..."
+sudo rsync -Plruq --delete /etc "$backup"

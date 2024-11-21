@@ -1,0 +1,12 @@
+#!/bin/sh
+
+sshadd "$HOME/.ssh/${1}_id_ed25519"
+sync() { rsync -PRru --delete --exclude "*.git" "$@"; }
+
+sync \
+	"${XDG_CONFIG_HOME:-$HOME/.config}/./vim/vimrc" \
+	"${XDG_CONFIG_HOME:-$HOME/.config}/./tmux/tmux.conf" \
+	"${XDG_CONFIG_HOME:-$HOME/.config}/./shell/aliasrc" \
+	"${XDG_CONFIG_HOME:-$HOME/.config}/./shell/inputrc" \
+	"${XDG_CONFIG_HOME:-$HOME/.config}/./shell/server.profile" \
+	"${1}:.config"

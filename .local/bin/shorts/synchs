@@ -1,0 +1,7 @@
+#!/bin/sh
+
+sync-server rpi
+
+# rsync -u ~/.config/lf/lfrc /tmp/lfrc
+# sed -i '/set icons/d' /tmp/lfrc
+# rsync -Pu /tmp/lfrc rpi:.config/lf/

@@ -1,0 +1,48 @@
+#!/bin/sh
+
+[ -z "$1" ] && echo "USAGE: open <FILE>" >&2 && exit 1
+
+for file in "$@"; do
+	case "$file" in
+
+		*.pdf|*.djvu|*.epub) setsid -f zathura "$file" ;;
+		*.png|*.jpg|*.jpeg|*.webp) setsid -f nsxiv "$file" ;;
+		*.gif|*.mkv|*.mp3|*.mp4|*.webm|*.ogg) ${PLAYER:-mpv --sub-auto=fuzzy} "$file" ;;
+		*.html) ${BROWSER:-w3m} "$file" ;;
+		*.pl.txt) fpl "$file" ;;
+		*.txt|*.description) ${PAGER:-less} "$file" ;;
+		*.md) glow --pager "$file" ;;
+		*.css|*.json|*.ipynb|*.vim|*.lua|*.iso|*.zip) LESSOPEN="|preview %s" less -r "$file" ;;
+		*.srt) fzf-subtitles -o "$file" ;;
+		*.dig) setsid -f digital "$file" ;;
+		*.doc|*.docx|*.ppt|*.pptx) setsid -f libreoffice "$file" ;;
+		*.sc|*.xls|*.xlsx) sc-im "$file" ;;
+		*.sim1) simulide "$file" ;;
+		*.xz) ${EDITOR:-nvim} "$file" ;;
+
+		*)
+			filetype="$(file --dereference --brief --mime-type "$file")"
+			case "$filetype" in
+				inode/directory) ${FILES:-lf} "$file" ; exit ;;
+				text/html*) ${BROWSER:-w3m} "$file" ;;
+				*pdf|*djvu|*epub+zip|*oxps|*fictionbook) setsid -f zathura "$file" ;;
+				text/*|*json|*zip|*zstd) "${EDITOR:-nvim}" "$file" ;;
+				application/vnd.openxmlformats-officedocument.*) setsid -f libreoffice "$file" ;;
+				application/sc) sc-im "$file" ;;
+				application/x-executable) "$file" ;;
+				image/*) setsid -f nsxiv "$file" ;;
+				video/*|audio/*) ${PLAYER:- mpv --sub-auto=fuzzy} "$file" ;;
+				*)
+					xdg-open "$file" || exit
+					[ -n "$DISPLAY" ] && notify-send "⚠️ open: unknown filetype" "$filetype"
+					echo "open: unknown filetype: $filetype" >&2
+					;;
+			esac
+			;;
+
+	esac
+
+	file="$(realpath "$file")"
+	sed -i "\|^$file$|d" "${XDG_DATA_HOME:-$HOME/.local/share}/openhist"
+	echo "$file" >> "${XDG_DATA_HOME:-$HOME/.local/share}/openhist"
+done

@@ -1,0 +1,52 @@
+#!/bin/sh
+
+help() { echo "filter - filter input based on given expression to evaluate
+
+USAGE:
+	filter [OPTION]... <FILTER_EXPRESSION> [FILES]...
+
+OPTIONS:
+	-i  update files with filtered content
+	-h  show this help message
+
+FILTER_EXPRESSION is a contains the command string that will be executed to test
+the input line. {} should be used as a placeholder that will be replaced to the
+double-quoted string of the input line. If the command evaluates to true, the
+line is printed to stdout.
+"; }
+
+err() { printf 'filter: %s\n' "$@" >&2; exit 1; }
+while getopts 'ih' o; do case "$o" in
+	i) iflag=1 ;;
+	h) help; exit ;;
+	*) err "invalid option -- '$OPTARG'" ;;
+esac done
+shift $((OPTIND - 1))
+
+[ "$#" -lt 1 ] && help >&2 && exit 1
+filter="$1"; shift
+
+evaluate() {
+	while IFS= read -r line; do
+		escaped_line="$(printf "%s\n" "$line" | sed "s|\"|\\\\\\\\\"|")"
+		cmd="$(printf "%s\n" "$filter" | sed "s|{}|\"$escaped_line\"|")"
+		eval "$cmd" && printf "%s\n" "$line"
+	done
+}
+
+if [ "$iflag" = 1 ]; then
+	for file in "$@"; do
+		[ -z "$1" ] && err "option -i requires file argument and none were passed"
+		tmp="$(mktemp "/tmp/$file.tmp-filter.XXXXXX")"
+		evaluate < "$file" > "$tmp"
+		mv "$tmp" "$file"
+	done
+	exit
+fi
+
+if [ -n "$1" ]; then
+	evaluate < "$@"
+else
+	evaluate
+fi
+

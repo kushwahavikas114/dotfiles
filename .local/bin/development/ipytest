@@ -1,0 +1,23 @@
+#!/bin/sh
+# create a 'dev' firefox profile and use it in selenium
+
+[ -z "$FF_DEV_PROFILE" ] && [ -d ~/.librewolf ] &&
+	FF_DEV_PROFILE="$(find ~/.librewolf/ -maxdepth 1 -type d -name '????????.dev')"
+
+[ -z "$FF_DEV_PROFILE" ] && [ -d ~/.librewolf ] &&
+	FF_DEV_PROFILE="$(find ~/.mozilla/ -maxdepth 1 -type d -name '????????.dev')"
+
+ipy -i -c "
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+
+options = webdriver.FirefoxOptions()
+options.binary_location = '/usr/bin/librewolf'
+options.profile = webdriver.FirefoxProfile(\"$FF_DEV_PROFILE\")
+
+d = webdriver.Firefox(options=options)
+d.get(\"${1:-http://127.0.0.1}\")
+
+import atexit
+atexit.register(d.quit)
+"

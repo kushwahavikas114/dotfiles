@@ -1,0 +1,18 @@
+--2024-10-23 16:26:25--  https://github.com/LukeSmithxyz/voidrice/blob/master/.local/bin/setbg
+Loaded CA certificate '/etc/ssl/certs/ca-certificates.crt'
+Resolving github.com (github.com)... 20.207.73.82
+Connecting to github.com (github.com)|20.207.73.82|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [text/html]
+Saving to: ‘setbg’
+
+     0K .......... .......... .......... .......... .......... 3.47M
+    50K .......... .......... .......... .......... .......... 9.00M
+   100K .......... .......... .......... .......... .......... 10.7M
+   150K .......... .......... .......... .......... .......... 10.7M
+   200K .......... .......... .......... .......... .......... 10.9M
+   250K .......... .......... .......... .......... .......... 11.2M
+   300K .......... .......... .......... .......               10.8M=0.04s
+
+2024-10-23 16:26:25 (8.07 MB/s) - ‘setbg’ saved [345695]
+

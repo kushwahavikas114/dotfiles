@@ -1,0 +1,18 @@
+#!/bin/sh
+
+# git-web: open the url of current git repositary in a web browser.
+# USAGE: gitw [remote]
+# 'remote' is set to origin if not provided.
+
+err() { printf "gitw: %s\n" "$@" >&2; exit 1; }
+
+git rev-parse --is-inside-work-tree >/dev/null || exit
+
+remote="${1:-origin}"
+url="$(git remote get-url "$remote" |
+	sed "s|^git@\(\S\+\):|https://\1/|")" || exit
+
+[ -z "$url" ] || [ "$remote" = "$url" ] &&
+	err "remote has no url: $remote"
+
+xdg-open "$url"

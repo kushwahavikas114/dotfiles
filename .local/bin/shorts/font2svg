@@ -1,0 +1,3 @@
+#!/bin/sh
+
+fontforge -c "import fontforge; fontforge.open('$1').generate('${1%.*}.svg')"

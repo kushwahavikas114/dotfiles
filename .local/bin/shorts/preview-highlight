@@ -1,0 +1,3 @@
+#!/bin/sh
+
+highlight --force --stdout --replace-tabs=2 --out-format=ansi "$@"
