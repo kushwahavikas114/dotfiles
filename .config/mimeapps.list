@@ -9,6 +9,7 @@ image/gif=img.desktop
 image/gif=img.desktop
 image/jpeg=img.desktop
 image/png=img.desktop
+image/webp=img.desktop
 text/plain=text.desktop
 video/mp4=video.desktop
 video/ogg=video.desktop

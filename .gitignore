@@ -47,6 +47,7 @@ shortcuts.*
 !/.config/gtk-4.0
 !/.config/lxsession
 !/.config/X11
+!/.config/mimeapps.list
 
 !/.config/i3
 !/.config/i3blocks
@@ -66,4 +67,5 @@ shortcuts.*
 !/.local/share/fzf
 /.local/share/fzf/*
 !/.local/share/applications
+/.local/share/applications/mimeinfo.cache
 !/.local/share/chars

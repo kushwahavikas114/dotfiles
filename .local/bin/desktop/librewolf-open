@@ -28,7 +28,7 @@ elif [ -e "$query" ]; then
 	query="$(readlink -f "$query")"; press ctrl+l
 else
 	# workaround for ctrl+k not working at initial startup
-	[ "$started" = 1 ] && sleep 0.5
+	[ "$started" = 1 ] && return
 	press ctrl+k
 fi
 

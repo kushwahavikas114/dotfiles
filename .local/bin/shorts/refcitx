@@ -1,6 +1,7 @@
 #!/bin/sh
 
+notify-send "Starting Fcitx..."
 fcitx
-sleep 0.1
+sleep 1
 remap
-
+notify-send "Fcitx Started"
