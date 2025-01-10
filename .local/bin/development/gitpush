@@ -1,10 +1,20 @@
 #!/bin/sh
 
-case "$(git config --get remote.origin.url)" in
-	*csstudent41*) sshadd ~/.ssh/github.com_id_ed25519 ;;
-	*labstudent41*) sshadd ~/.ssh/labstudent41_id_ed25519 ;;
-esac
+push_to_remote() {
+	case "$(git config --get remote.origin.url)" in
+		*csstudent41*) sshadd ~/.ssh/github.com_id_ed25519 ;;
+		*labstudent41*) sshadd ~/.ssh/labstudent41_id_ed25519 ;;
+		*vtc-tech*) sshadd ~/.ssh/vartaktechclub_id_ed25519 ;;
+	esac
 
-git add --all
-git commit  # --allow-empty-message
-git push -u origin
+	git add --all
+	git commit
+	git push -u origin
+}
+
+[ -z "$1" ] && { push_to_remote; exit; }
+
+for dir in "$@"; do
+	cd "$dir" || exit 1
+	push_to_remote
+done

@@ -23,9 +23,9 @@ case "$1" in
 	*.png|*.jpg|*.jpeg|*.webp|*.mp3|*.ogg|*.mp4|*.mkv|*.webm) mediainfo -- "$1" ;;
 	*.info.json) jq -C . "$1" ;;
 	*.json|*.ipynb) highlight --syntax=json -- "$1" ;;
-	*.tgz|*.tar.gz) tar tzf "$1" ;;
+	*.tar.gz|*.tgz) tar tzf "$1" ;;
 	*.tar.bz2|*.tbz2) tar tjf "$1" ;;
-	*.tar.txz|*.txz) xz --list "$1" ;;
+	*.tar.xz|*.txz) tar tJf "$1" ;;
 	*.tar) tar tf "$1" ;;
 	*.zip|*.jar|*.war|*.ear|*.oxt) unzip -l "$1" ;;
 	*.rar) unrar l "$1" ;;

@@ -34,6 +34,7 @@ setopt histignorespace  # ignore lines starting with a space
 # Enable colors and change prompt:
 autoload -U colors && colors
 PS1="%B%{$fg[red]%}[%{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%1~%{$fg[red]%}]%{$reset_color%}$%b "
+#PS1=$'\n'"%B%{$fg[red]%}[%{$fg[green]%}%?%{$fg[red]%}] %{$fg[yellow]%}%n%{$fg[green]%}@%{$fg[blue]%}%M %{$fg[magenta]%}%~"$'\n'"%{$fg[red]%}>%{$reset_color%}%b "
 #PS1="%B%{$fg[red]%} %~ >%{$fg[yellow]%}%{$reset_color%}%b "
 [ -n "$LF_LEVEL" ] && PS1="$PS1(lf: $LF_LEVEL) "
 
@@ -95,7 +96,7 @@ stty -ixon
 
 
 _command_fail_hook() {
-	[ $? != 1 ] && return
+	[ $? = 1 ] || return
 	if [ -n "$TMUX" ]; then
 		tmux send-keys C-p
 	elif [ -n "$XDOTOOL_WINDOW_ID" ]; then
@@ -186,11 +187,11 @@ _fzf-cd-widget() {
 	cdpath="$(eval "${FZF_CD_COMMAND:-find -L . -type d ! -wholename '*.git*' -printf '%p/\n'}" |
 		FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --reverse --height 40% $FZF_CD_OPTS" fzf |
 		sed 's/"/\\\"/')"
-		[ -z "$cdpath" ] && { zle reset-prompt; return; }
+	[ -z "$cdpath" ] && { zle reset-prompt; return; }
 	zle push-line
-  BUFFER="cd -- \"$cdpath\""
+	BUFFER="cd -- \"$cdpath\""
 	zle reset-prompt
-  zle accept-line
+	zle accept-line
 }
 zle     -N   fzf-cd-widget _fzf-cd-widget
 bindkey '^[c' fzf-cd-widget
@@ -231,7 +232,7 @@ _get-help() {
 	cmd=(${=BUFFER})
 	zle push-line
 	case "${cmd[1]}" in
-		gh|hugo|npm|git) BUFFER="help ${cmd[1]}-${cmd[2]}" ;;
+		docker|gh|hugo|npm|git) BUFFER="help ${cmd[1]}-${cmd[2]}" ;;
 		*) BUFFER="get-help $cmd" ;;
 	esac
 	zle accept-line
@@ -266,8 +267,8 @@ alias sp='sudo pacman'
 alias sv='sudo sv'
 alias mmv='noglob zmv -W'
 alias s='sudo '
-alias mirror='sudo reflector -f 30 -l 30 --number 10 --verbose --save /etc/pacman.d/mirrorlist'
-alias mirrord='sudo reflector --latest 50 --number 20 --sort delay --save /etc/pacman.d/mirrorlist'
+alias mirror='sudo reflector -f 30 -l 30 --number 10 --verbose --save /etc/pacman.d/mirrorlist-arch'
+alias mirrord='sudo reflector --latest 50 --number 20 --sort delay --save /etc/pacman.d/mirrorlist-arch'
 alias cleanup='sudo pacman -Rns $(pacman -Qtdq)'
 alias fixpacman='sudo rm /var/lib/pacman/db.lck'
 alias gtypist="gtypist $GTYPIST_OPTS"
@@ -289,5 +290,5 @@ f() {
 # alias ssudo='sudofu '
 
 # Load syntax highlighter; should be last.
-source "$ZDOTDIR/plugins/fast-syntax-highlighting/fast-syntax-highlighting.plugin.zsh"
+source "/home/master/.config/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh"
 

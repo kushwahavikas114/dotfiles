@@ -38,7 +38,7 @@ sudoedit() {
 }
 
 lfcd () {
-	[ $# -gt 0 ] && [ -z "$1" ] && return 2
+	[ $# -gt 0 ] && [ -z "$1" ] && return 3
 	# cd "$(command lf -print-last-dir "$@")"
 
 	tmp="$(mktemp)"
@@ -47,7 +47,7 @@ lfcd () {
 		dir="$(cat "$tmp")"
 		rm -f "$tmp"
 		[ -d "$dir" ] || return
-		[ "$dir" != "$PWD" ] || return
+		[ "$dir" != "$PWD" ] || return 0
 		cd "$dir"
 	fi
 }
@@ -75,6 +75,7 @@ alias cp='cp -iv'
 alias mv='mv -iv'
 alias du='du -h'
 alias mkdir='mkdir -pv'
+alias rmdir='rmdir -v'
 alias watch='watch -c -n 1 '
 alias wget='wget -c'
 alias fzf='fzf --ansi'

@@ -1,6 +1,8 @@
 map u scroll half-up
 map d scroll half-down
 map D toggle_page_mode
+map b toggle_statusbar
+map <C-l> nohlsearch
 
 map > rotate rotate-cw
 map < rotate rotate-ccw

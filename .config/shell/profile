@@ -51,7 +51,7 @@ export QT_FONT_DPI=112
 export SDCV_PAGER='less -R --quit-if-one-screen'
 export HTTP_HOME='https://www.duckduckgo.com'
 export CHROME_EXECUTABLE='chromium'
-export FZF_DEFAULT_COMMAND="find -L . ! -wholename '*.git*' \( -type d -printf '%p/\n' , ! -type d -print \)"
+export FZF_DEFAULT_COMMAND="find -H . ! -wholename '*.git*' \( -type d -printf '%p/\n' , ! -type d -print \)"
 export FZF_DEFAULT_OPTS="
 	--history='$XDG_DATA_HOME/fzf/history'
 	--preview='\$PREVIEWER {}' --preview-window=hidden

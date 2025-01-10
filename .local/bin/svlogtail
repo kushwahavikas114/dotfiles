@@ -1,0 +1,55 @@
+#!/bin/sh
+# From socklog-void
+# https://github.com/void-linux/socklog-void/blob/master/svlogtail
+
+usage () {
+	cat <<-'EOF'
+	svlogtail [-f] [LOG...] - show svlogd logs conveniently
+
+	Without arguments, show current logs of all services, uniquely.
+	With arguments, show all logs of mentioned services
+
+	With -f, follow log output.
+	EOF
+}
+
+globexist() {
+	[ -f "$1" ]
+}
+
+IFS='
+'
+
+fflag=false
+if [ "$1" = -f ]; then
+	shift
+	fflag=true
+fi
+
+if [ $# = 0 ]; then
+	cat /var/log/socklog/*/current | sort -u
+	if $fflag; then
+		tail -Fq -n0 /var/log/socklog/*/current | uniq
+	fi
+else
+	old=
+	cur=
+	for log; do
+		case "$log" in
+			-*) usage; exit 1;;
+		esac
+		if [ -d /var/log/socklog/$log ]; then
+			if globexist /var/log/socklog/$log/*.[us]; then
+				old="$old$IFS/var/log/socklog/$log/*.[us]"
+			fi
+			cur="$cur$IFS/var/log/socklog/$log/current"
+		else
+			echo "no logs for $log" 1>&2
+                        exit 1
+		fi
+	done
+	cat $old $cur | sort
+	if $fflag; then
+		tail -Fq -n0 $cur
+	fi
+fi

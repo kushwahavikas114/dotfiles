@@ -11,7 +11,7 @@ for file in "$@"; do
 		*.html) ${BROWSER:-w3m} "$file" ;;
 		*.pl.txt) fpl "$file" ;;
 		*.txt|*.description) ${PAGER:-less} "$file" ;;
-		*.md) glow --pager "$file" ;;
+		*.md) glow --pager --width $(("$(tput cols)" - 5)) "$file" ;;
 		*.css|*.json|*.ipynb|*.vim|*.lua|*.iso|*.zip) LESSOPEN="|preview %s" less -r "$file" ;;
 		*.srt) fzf-subtitles -o "$file" ;;
 		*.dig) setsid -f digital "$file" ;;

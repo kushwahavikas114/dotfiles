@@ -33,6 +33,7 @@ md_test() { pandoc -t pdf "$file" | zathura -; }
 tex_compile() { pdflatex -output-directory="$(dirname "$file")" "$file"; }
 tex_clean() { find "$(dirname "${1}")" -regex \
 	'.*\(_minted.*\|.*\.\(4tc\|xref\|tmp\|pyc\|pyg\|pyo\|fls\|vrb\|fdb_latexmk\|bak\|swp\|aux\|log\|synctex\(busy\)\|lof\|lot\|maf\|idx\|mtc\|mtc0\|nav\|out\|snm\|toc\|bcf\|run\.xml\|synctex\.gz\|blg\|bbl\)\)' -delete; }
+cls_compile() { file="${file%.cls}.tex"; tex_compile "$@"; }
 html_format() { tidy -q "$file" 2>/dev/null; }
 html_lint() { tidy -q "$file" >/dev/null; }
 html_run() { w3m "$file"; }
@@ -138,6 +139,7 @@ case $filetype in
 	text/x-shellscript)     filetype_ext="sh" ;;
 	text/html)              filetype_ext="html" ;;
 	application/javascript) filetype_ext="js" ;;
+	application/json)       filetype_ext="json" ;;
 	text/x-php)             filetype_ext="php" ;;
 	text/x-awk)             filetype_ext="awk" ;;
 esac
@@ -150,17 +152,15 @@ else
 fi
 
 execute_task() {
-	[ "$NO_BASENAME" != 1 ] && {
-		file_task="${file_ext}_${action}"
-		[ "${tasks#*"[$file_task]"}" != "$tasks" ] &&
-			{ $file_task; local ret=$?; local tasked=1; }
-	}
-	[ "$tasked" != 1 ] && {
-		filetype_task="${filetype_ext}_${action}"
-		[ "${tasks#*"[$filetype_task]"}" != "$tasks" ] &&
-			{ $filetype_task; local ret=$?; local tasked=1; }
-	}
-	[ "$tasked" != 1 ] && return 1
+	file_task="${file_ext}_${action}"
+	filetype_task="${filetype_ext}_${action}"
+	if [ "$NO_BASENAME" != 1 ] && [ "${tasks#*"[$file_task]"}" != "$tasks" ]; then
+		$file_task; ret=$?
+	elif [ "${tasks#*"[$filetype_task]"}" != "$tasks" ]; then
+		$filetype_task; ret=$?
+	else
+		return 1
+	fi
 	[ "$ret" != 0 ] && printf "\nshell returned %s\n" "$ret" >&2
 	return 0
 }

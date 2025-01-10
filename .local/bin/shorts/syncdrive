@@ -1,3 +1,0 @@
-#!/bin/sh
-
-rclone -v sync --delete-excluded --exclude=".git/**" ~/GDrive gdrive:

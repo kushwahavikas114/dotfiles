@@ -1,0 +1,4 @@
+#!/bin/sh
+
+qrencode "$@" -o /tmp/qr.png
+${OPENER:-xdg-open} /tmp/qr.png

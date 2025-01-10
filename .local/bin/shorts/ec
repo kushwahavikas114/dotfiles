@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# edit-clipboard: edit the content of clipboard
+
+xclip -sel clip -o >/tmp/clipboard && nvim /tmp/clipboard && xclip -sel clip -i /tmp/clipboard

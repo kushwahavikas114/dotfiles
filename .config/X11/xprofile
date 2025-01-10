@@ -6,9 +6,8 @@ echo "Sourced: $(date)" >> ~/.local/state/xprofile.logs
 
 xrdb "${XDG_CONFIG_HOME:-$HOME/.config}/X11/Xresources" & xrdbpid=$!
 numlockx on &
-setdp &
 
-autostart="copyq dunst pipewire syncthing remapd"
+autostart="copyq dunst pipewire syncthing remapd gammastep setdp prime-offload"
 
 for program in $autostart; do
 	pidof -sx "$program" || "$program" &

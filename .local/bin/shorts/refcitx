@@ -1,7 +1,8 @@
 #!/bin/sh
 
-notify-send "Starting Fcitx..."
+id="$(notify-send --print-id "Starting Fcitx...")"
 fcitx
 sleep 1
 remap
-notify-send "Fcitx Started"
+fcitx-remote -t
+notify-send --replace-id="$id" "✅ Fcitx Started"
