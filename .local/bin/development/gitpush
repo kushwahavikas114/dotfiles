@@ -8,13 +8,12 @@ push_to_remote() {
 	esac
 
 	git add --all
-	git commit
-	git push -u origin
+	git commit && git push -u origin
 }
 
 [ -z "$1" ] && { push_to_remote; exit; }
 
 for dir in "$@"; do
-	cd "$dir" || exit 1
+	cd "$dir" || exit
 	push_to_remote
 done

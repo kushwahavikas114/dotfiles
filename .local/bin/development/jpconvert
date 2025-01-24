@@ -1,0 +1,16 @@
+#!/bin/sh
+
+env="${XDG_DATA_HOME:-$HOME/.local/share}/virtualenvs/main/bin/activate"
+[ -f "$env" ] && . "$env"
+
+notebook="$1"
+script="${notebook%.ipynb}.py"
+jupyter nbconvert --to script "$notebook"
+
+sed -i \
+	-e "s/^# coding: .*$/# same as $notebook/" \
+	-e "s/^\([A-Za-z0-9_.]\+\)$/print(\"\\\nData in '\1' :-\", \1, sep='\\\n', end='\\\n\\\n')/" \
+	"$script"
+
+sed -i -z "s/\n# In\[[0-9 ]*\]:\n\n//g" "$script"
+sed -i -z "s/\n\s*\n\([][A-Za-z0-9_\.(,)]\+\)\n\n\n/\nprint(\"\\\n>>> \1\", \1, sep='\\\n', end='\\\n\\\n')\n\n\n/g" "$script"

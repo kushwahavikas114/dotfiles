@@ -6,16 +6,7 @@
 
 export PREVIEW="${PREVIEW:-"cat \"\$(dirname {})/.description/\${\$(basename {})%.*}.txt\" 2>/dev/null || preview {}"}"
 
-find "$@" -type f \
-		! -path '*/.*' \
-		! -name '*.srt' \
-		! -name '*.vtt' \
-		! -name '*.description' \
-		! -wholename '.description/*' \
-		! -name '*.info.json' \
-		! -name '*.live_chat.json' \
-		! -name '*.yt*' |
-	sort |
+fd -I --color=always --type=file --ignore-file="${XDG_CONFIG_HOME:-$HOME/.config}/ytignore" "$@" | sort |
 	fzf --multi --reverse \
 		--history="${FZF_HIST:=$HOME/.local/share/fzf/media_history}" \
 		--header="${FZF_HEADER:-Browse Media Files}" --header-first \

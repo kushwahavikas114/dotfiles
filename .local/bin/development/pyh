@@ -5,6 +5,8 @@
 [ -x "${XDG_DATA_HOME:-$HOME/.local/share}/virtualenvs/main/bin/python" ] &&
 	alias python="${XDG_DATA_HOME:-$HOME/.local/share}/virtualenvs/main/bin/python"
 
+export PAGER="less $LESS"
+
 if [ "$#" -gt 0 ]; then
 	python -c "help('$*')"
 else

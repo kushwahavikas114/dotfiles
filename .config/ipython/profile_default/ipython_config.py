@@ -1144,3 +1144,23 @@ c.TerminalInteractiveShell.prompt_includes_vi_mode = False
 #          when IPython starts.
 #  Default: False
 # c.StoreMagics.autorestore = False
+
+# Configure prompt
+# try:
+#     from IPython.terminal.prompts import Prompts as BasePrompts
+# except ImportError:
+#     pass # not IPython 5.0
+# else:
+#     from pygments.token import Token
+#     from time import strftime
+
+#     class MyPrompts(BasePrompts):
+#         def in_prompt_tokens(self, cli=None):
+#             return [
+#                 (Token.Prompt, strftime('%H:%M') + ' '),
+#                 (Token.PromptNum, str(self.shell.execution_count)),
+#                 (Token.Prompt, ' >>> '),
+#             ]
+
+#     c.InteractiveShell.prompts_class = MyPrompts
+

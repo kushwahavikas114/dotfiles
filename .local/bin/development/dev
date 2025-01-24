@@ -49,8 +49,8 @@ go_format() { gofmt "$file"; }
 go_lint() { gofmt -d "$file"; }
 go_compile() { go build "$file"; }
 go_run() { "$(realpath "${file%.go}")" "$@"; }
-go_test() { go run "$file" "$@"; }
-go_serve() { findweb . -name '*.go' | entr -r sh -c "printf '\n\n$ go run *.go\n'; go run *.go"; }
+go_test() { TMPDIR=~/.cache/go-tmp go run "$file" "$@"; }
+go_serve() { findweb . -name '*.go' | entr -r sh -c "printf '\n\n$ go run *.go\n'; dev test *.go"; }
 
 c_test() {
 	out="${file%.c}"
@@ -109,6 +109,9 @@ kt_test() {
 	java -jar "$out"
 	rm "$out"
 }
+
+py_format() { autopep8 "$file"; }
+py_formatin() { autopep8 -i "$file"; }
 
 py_serve() { findweb . -name '*.py' | entr -r python "$file"; }
 # py_lint() {

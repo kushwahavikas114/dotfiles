@@ -1,0 +1,16 @@
+#!/bin/sh
+
+# Alias to jupyter.
+# Select and launch console when no arguments are passed.
+
+[ -f "${XDG_DATA_HOME:=$HOME/.local/share}/virtualenvs/main/bin/activate" ] &&
+	. "$XDG_DATA_HOME/virtualenvs/main/bin/activate"
+
+[ "$#" -eq 0 ] && {
+	kernel="$(find "$XDG_DATA_HOME/jupyter/runtime" -name 'kernel*' -printf '%TY-%Tm-%Td %TH:%TM:%.2TS %f\n' |
+		sed 's/kernel-\(.\+\)-.\+-.\+-.\+-.\+\.json/\1/' | sort --reverse |
+		fzf --header="Select jupyter kernel" --header-first | cut -d\  -f3)" || exit
+	set -- console --existing "$kernel"
+}
+
+jupyter "$@"

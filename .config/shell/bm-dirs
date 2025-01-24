@@ -39,7 +39,7 @@ pw	~/Phone/Android/media/com.whatsapp/WhatsApp/Media/WhatsApp\ Documents
 
 mn	/mnt
 stg	${STORAGE:-/mnt/storage}
-lr	${STORAGE:-/mnt/storage}/Library
+lbr	${STORAGE:-/mnt/storage}/Library
 med	${STORAGE:-/mnt/storage}/Media
 sts	${STORAGE:-/mnt/storage}/sites
 sd	/sdcard
@@ -49,3 +49,4 @@ usr	${PREFIX:-/usr}
 ush	/usr/share
 usd	/usr/share/doc
 usha	/usr/share/applications
+tmu	/tmp/mozilla_${USER}0

@@ -1,0 +1,10 @@
+{
+    // Jupyter Notebook Full Width Notebook
+    // @jupyter-notebook/notebook-extension:full-width-notebook
+    // Jupyter Notebook Notebook With settings
+    // ********************************************************
+
+    // Full Width Notebook
+    // Whether to the notebook should take up the full width of the application
+    "fullWidthNotebook": false
+}

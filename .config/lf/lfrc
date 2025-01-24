@@ -113,8 +113,7 @@ map <backspace> ${{ lf -remote "send $id select \"$(cat ${XDG_DATA_HOME:-$HOME/.
 	fzf --tac --reverse --header-first --header='File History')\"" }}
 map <c-k> ${{ lf -remote "send $id cd \"$(cat ${XDG_DATA_HOME:-$HOME/.local/share}/cdhist |
 	fzf --tac --reverse --header-first --header='Path History')\"" }}
-map <c-c> ${{ lf -remote "send $id cd \"$(find -mindepth 1 -type d |
-	fzf --reverse --header-first --header='Jump to directory')\"" }}
+map <c-c> select_eval "fzf --reverse --query '/$ ' --header-first --header='Jump to directory'"
 
 map c
 map d
@@ -123,7 +122,7 @@ map i :rename
 map a :rename; cmd-right
 map A :rename; cmd-end
 map S push A<c-u>
-map o $LESSOPEN="|preview %s" less $f
+map o $LESSOPEN="|preview %s" less -r $f
 map O $mimeopen --ask $f
 map . set hidden!
 map x cut
@@ -136,19 +135,17 @@ map b $vidir
 map V push :!nvim<space>""<c-b>
 map P :link
 
-map ge extract $f
+map ge extract
 map gl clear
-map gx ${{ chmod u+x $fx; lf -remote "send $id reload"; }}
+map gx ${{ chmod +x $fx; lf -remote "send $id reload"; }}
 map gX ${{ chmod -x $fx; lf -remote "send $id reload"; }}
 map gm push $chmod<space>--<space>$fx<c-a><a-f><space>
 map gL %lf -remote "send ${id} select '$(readlink $f)'"
 map gd !du -hd1
-map gf !file $f
-map gy %{{ printf "%s" "$f" | xsel -b }}
-map gY %{{ printf "%s" "$fs" | xsel -b }}
+map gf !{{ file "$f" && file --brief --mime-type "$f" }}
+map gy %{{ printf "%s" "$fx" | xsel -b }}
 map gi link_index
-map gsh $setbg $f
-map gsl $setbg -l $f
+map gsb $setbg $f
 map zpp set previewer preview
 map zpc set previewer cat
 map zpb set previewer preview-bat

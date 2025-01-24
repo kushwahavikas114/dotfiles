@@ -40,7 +40,9 @@ shortcuts*
 !/.config/yt-dlp
 !/.config/python
 !/.config/ipython
+!/.config/jupyter
 !/.config/git
+!/.config/fd
 
 !/.config/gtk-2.0
 !/.config/gtk-3.0

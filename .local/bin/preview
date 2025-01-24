@@ -2,9 +2,9 @@
 
 if [ -d "$1" ]; then
 	if [ -x /bin/eza ] || [ -x /usr/bin/eza ]; then
-		eza -alhF --group-directories-first --color=always --icons -- "$1"
+		eza -alhF --group-directories-first --color=always --icons=always -- "$1"
 	else
-		ls -lhAF --group-directories-first --color -- "$1"
+		ls -lhAF --group-directories-first --color=always -- "$1"
 	fi
 	readme="$(find "$1" -maxdepth 1 -name "README.*" | head -1)"
 	[ -n "$readme" ] && preview "$readme"
@@ -14,7 +14,7 @@ fi
 alias highlight='highlight --out-format=ansi'
 
 case "$1" in
-	'') echo "preview: file name required" >&2; exit 1 ;;
+	'') echo "USAGE: preview <FILE>" >&2; exit 1 ;;
 	*.html) w3m -dump "$1" ;;
 	*.md) glow -s dark --width="${FZF_PREVIEW_COLUMNS:-"$(tput cols)"}" "$1" ;;
 	# *.vim) highlight --syntax=vim --replace-tabs=2 -- "$1" ;;

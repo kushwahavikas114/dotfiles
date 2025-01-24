@@ -1,4 +1,8 @@
 #!/bin/sh
 
 unset PYTHONSTARTUP
-"${XDG_DATA_HOME:-$HOME/.local/share}/virtualenvs/main/bin/ipython" "$@"
+
+env="${XDG_DATA_HOME:-$HOME/.local/share}/virtualenvs/main/bin/activate"
+[ -f "$env" ] && . "$env"
+
+ipython "$@"

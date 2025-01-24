@@ -34,7 +34,7 @@ set $homeScreenWallpaper '/usr/share/wallpapers/garuda-wallpapers/background.jpg
 
 ### Applications: ###
 set $preferredTerminalEmulator    $TERMINAL
-set $preferredBrowser             torbrowser open
+set $preferredBrowser             librewolf
 set $preferredFileManager         thunar
 set $preferredMailClient          $MAIL
 set $preferredTextEditor          $EDITOR

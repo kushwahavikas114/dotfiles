@@ -37,9 +37,12 @@ export R_ENVIRON_USER="$XDG_DATA_HOME/R/.Renviron"
 export SSH_AUTH_SOCK="$HOME/.ssh/ssh_auth_sock"
 export GOPATH="$XDG_DATA_HOME/go"
 export SQLITE_HISTORY="$XDG_DATA_HOME/sqlite_history"
+export NODE_REPL_HISTOR="$XDG_DATA_HOME/node_repl_history"
+export MYSQL_HISTFILE="$XDG_DATA_HOME/mysql_history"
+export HISTFILE="$XDG_DATA_HOME/bash_history"
 
 # program configuration
-export LESS='-Rf --mouse --use-color -Dd+r$Du+b$'
+export LESS='-fiR --mouse --use-color -j 10 -Dd+r -Du+b'
 export LESSOPEN='|lessopen.sh %s'
 export GROFF_NO_SGR=1
 export GTK_IM_MODULE='fcitx'
@@ -51,7 +54,7 @@ export QT_FONT_DPI=112
 export SDCV_PAGER='less -R --quit-if-one-screen'
 export HTTP_HOME='https://www.duckduckgo.com'
 export CHROME_EXECUTABLE='chromium'
-export FZF_DEFAULT_COMMAND="find -H . ! -wholename '*.git*' \( -type d -printf '%p/\n' , ! -type d -print \)"
+export FZF_DEFAULT_COMMAND="find -H . ! -wholename '*.git*' ! \( -type d -printf '%p/\n' , ! -type d -print \)"
 export FZF_DEFAULT_OPTS="
 	--history='$XDG_DATA_HOME/fzf/history'
 	--preview='\$PREVIEWER {}' --preview-window=hidden
@@ -90,7 +93,6 @@ export FZF_DEFAULT_OPTS="
 # export GTYPIST_OPTS="--color 3,0 --banner-color 0,1,2,3"  # red-yellow
 # export GTYPIST_OPTS="--color 3,0 --banner-colors 0,2,4,1"  # green-yellow
 export GTYPIST_OPTS="--color 6,0 --banner-color 0,4,5,1"  # blue-cyan
-
 
 # # path
 # find -L ~/.local/share/gem/ruby/3.0.0/bin ~/.local/bin ~/bin \

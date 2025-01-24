@@ -9,10 +9,9 @@ source ~/.profile
 [ -n "$SDOTDIR" ] || SDOTDIR="${XDG_CONFIG_HOME:-$HOME/.config}/shell"
 [ -n "$ZDOTDIR" ] || ZDOTDIR="${XDG_CONFIG_HOME:-HOME/.config}/zsh"
 
+source "/usr/share/fzf/completion.zsh"
 source "$ZDOTDIR/command-tools.zsh"
-source "$ZDOTDIR/plugins/fzf-completion.zsh"
-# source "$ZDOTDIR/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-source "$ZDOTDIR/plugins/zsh-autosuggestions.zsh"
+source "$ZDOTDIR/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
 
 setopt correct  # Auto correct mistakes
 setopt extended_glob  # Allows using regular expressions with *
@@ -245,22 +244,33 @@ bindkey '^[H' get-help
 [ -f "$SDOTDIR/shortcutrc" ] && source "$SDOTDIR/shortcutrc"
 [ -f "$ZDOTDIR/zshnameddirrc" ] && source "$ZDOTDIR/zshnameddirrc"
 
+
 case "$TERM" in *256*)
-	if [ -x /bin/eza ] || [ -x /usr/bin/eza ]; then
-		alias l='exa -aF --group-directories-first --color=always --icons'
-		lt() { exa --group-directories-first --color=always \
-			--icons -FaT "$@" | less -rF; }
-	fi
+
+	command -V eza >/dev/null && {
+		export IGNORE_GLOB="$(tr '\n' '|' < "$XDG_CONFIG_HOME/fd/ignore")"
+		alias l='eza -aF --group-directories-first --color=always --icons'
+		alias ll='l -l'
+		alias lr='l -R -I "$IGNORE_GLOB"'
+		lt() { eza --group-directories-first --color=always \
+			--icons=always -aTF -I "$IGNORE_GLOB" "$@" | less -rF; }
+	}
+
+	command -V fd >/dev/null && {
+		FZF_DEFAULT_COMMAND="fd --hidden --no-ignore-vcs --color=always $@"
+		FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --ansi"
+		alias sr='fd --no-ignore-vcs --color=always . ~/.config ~/.local/bin ~/bin | fzf --ansi'
+	}
 
 	command -V starship >/dev/null && {
 		eval "$(starship init zsh)"
-		function set_win_title(){
+		function set_win_title() {
 				echo -ne "\033]0; $USER@$HOST:${PWD/$HOME/~} \007"
 		}
 		precmd_functions+=(set_win_title)
 	}
-	;;
-esac
+
+;; esac
 
 alias p='pacman'
 alias sp='sudo pacman'
@@ -275,6 +285,7 @@ alias gtypist="gtypist $GTYPIST_OPTS"
 alias typ='launch-gtypist -l "$(sed "/^gtypist lesson - \(.*\)$/!d; s//\1/" ~/Documents/Notes/QuickNote.md)"'
 alias typa='launch-gtypist -e 3 -l "$(sed "/^gtypist lesson - \(.*\)$/!d; s//\1/" ~/Documents/Notes/ak47.txt)"'
 
+# Find command package
 f() {
 	ret=$?
 	[ -n "$1" ] && { pacman -F "$@"; return; }

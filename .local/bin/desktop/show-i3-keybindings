@@ -6,6 +6,6 @@ if [ -n "$TERM" ]; then
 		column --table --separator='|' | less -r
 else
 	grep '^bindsym' ~/.config/i3/config | sort |
-		sed 's/^bindsym \(\S*\)\s\+\(.*\)$/\1|\2/; s/\$super+/  /; s/Shift+/Shift /; s/$alt+/Alt /; s/Ctrl+/Ctrl /' |
+		sed 's/^bindsym \(\S*\)\s\+\(.*\)$/\1|\2/; s/\$super+/  /; s/Shift+/⬆️ /; s/$alt+/⎇ /; s/Ctrl+/Ctrl /' |
 		column --table --separator='|' | yad --text-info
 fi

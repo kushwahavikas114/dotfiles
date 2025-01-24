@@ -1,0 +1,11 @@
+{
+    "enabled": true,
+    "enabledInEditors": true,
+    "extraKeybindings": [
+        {
+            "context": "insert",
+            "command": "jk",
+            "keys": "<Esc>"
+        }
+    ]
+}
