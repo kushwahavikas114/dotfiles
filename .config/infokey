@@ -1,0 +1,4 @@
+#var
+link-style=blue,underline
+active-link-style=black,bgcyan,underline
+match-style=black,bgyellow,bold

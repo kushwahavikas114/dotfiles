@@ -25,9 +25,16 @@ if filereadable(config_dir . "autoload/plug.vim")
 	" Plug 'jreybert/vimagit'
 	" Plug 'lukesmithxyz/vimling'
 	" Plug 'vimwiki/vimwiki'
-	" Plug 'vim-airline/vim-airline',  {'on': 'AirlineTheme'}
-	" Plug 'vim-airline/vim-airline-themes',   {'on': 'AirlineTheme'}
+	Plug 'vim-airline/vim-airline',  {'on': 'AirlineTheme'}
+	Plug 'vim-airline/vim-airline-themes',   {'on': 'AirlineTheme'}
 	" Plug 'joshdick/onedark.vim'
+
+	Plug 'pangloss/vim-javascript'
+	Plug 'leafgarland/typescript-vim'
+	Plug 'peitalin/vim-jsx-typescript'
+	" Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
+	" Plug 'jparise/vim-graphql'
+
 	call plug#end()
 endif
 

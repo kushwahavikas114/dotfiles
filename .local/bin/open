@@ -42,7 +42,9 @@ for file in "$@"; do
 
 	esac
 
+	[ -z "$OPEN_HISTFILE" ] &&
+		export OPEN_HISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/open_history"
 	file="$(realpath "$file")"
-	sed -i "\|^$file$|d" "${XDG_DATA_HOME:-$HOME/.local/share}/openhist"
-	echo "$file" >> "${XDG_DATA_HOME:-$HOME/.local/share}/openhist"
+	sed -i "\|^$file$|d" "$OPEN_HISTFILE"
+	echo "$file" >> "$OPEN_HISTFILE"
 done

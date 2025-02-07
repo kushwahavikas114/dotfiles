@@ -1,0 +1,5 @@
+#!/bin/sh
+
+# rh - R help
+
+R -e "help($@)"

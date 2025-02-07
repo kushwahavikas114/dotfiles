@@ -1,3 +1,0 @@
-#!/bin/sh
-
-bat --tabs=2 --style=plain --color=always "$@"

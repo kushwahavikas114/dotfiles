@@ -14,32 +14,36 @@ XDG_STATE_HOME="$HOME/.local/state"
 XDG_CACHE_HOME="$HOME/.cache"
 
 export MOUNTPATH="/run/media/$USER"
-export JUPYTER_CONFIG_DIR="$XDG_CONFIG_HOME/jupyter"
-export W3M_DIR="$XDG_CONFIG_HOME/w3m"
-export NCFTPDIR="$XDG_DATA_HOME/ncftp"
 export PASSWORD_STORE_DIR="$HOME/Phone/Backup/pass"
+export SSH_AUTH_SOCK="$HOME/.ssh/ssh_auth_sock"
+export NCFTPDIR="$XDG_DATA_HOME/ncftp"
+export R_ENVIRON_USER="$XDG_DATA_HOME/R/.Renviron"
+export GOPATH="$XDG_DATA_HOME/go"
 export ANDROID_USER_HOME="$XDG_DATA_HOME/android"
 export __GL_SHADER_DISK_CACHE_PATH="$HOME/.cache/nv"
+export PYENV_ROOT="$XDG_DATA_HOME/pyenv"
 
 export XINITRC="$XDG_CONFIG_HOME/X11/xinitrc"
 export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
 export INPUTRC="$XDG_CONFIG_HOME/shell/inputrc"
 export WGETRC="$XDG_CONFIG_HOME/wget/wgetrc"
+export W3M_DIR="$XDG_CONFIG_HOME/w3m"
 export PYTHONSTARTUP="$XDG_CONFIG_HOME/python/pythonrc"
 export IPYTHONDIR="$XDG_CONFIG_HOME/ipython"
+export JUPYTER_CONFIG_DIR="$XDG_CONFIG_HOME/jupyter"
 export NOTMUCH_CONFIG="$XDG_CONFIG_HOME/notmuch/config"
 export MBSYNCRC="$XDG_CONFIG_HOME/isyncrc"
 
-export LESSHISTFILE="$XDG_DATA_HOME/less/history"
-export FZF_HIST_FILE="$XDG_DATA_HOME/fzf/history"
-export SDCV_HISTFILE="$XDG_DATA_HOME/sdcv"
-export R_ENVIRON_USER="$XDG_DATA_HOME/R/.Renviron"
-export SSH_AUTH_SOCK="$HOME/.ssh/ssh_auth_sock"
-export GOPATH="$XDG_DATA_HOME/go"
-export SQLITE_HISTORY="$XDG_DATA_HOME/sqlite_history"
-export NODE_REPL_HISTOR="$XDG_DATA_HOME/node_repl_history"
-export MYSQL_HISTFILE="$XDG_DATA_HOME/mysql_history"
-export HISTFILE="$XDG_DATA_HOME/bash_history"
+export FZF_HISTDIR="$XDG_STATE_HOME/fzf"
+export LESSHISTFILE="$XDG_STATE_HOME/less/history"
+export FZF_HISTFILE="$XDG_STATE_HOME/fzf/history"
+export SDCV_HISTFILE="$XDG_STATE_HOME/sdcv_history"
+export SQLITE_HISTORY="$XDG_STATE_HOME/sqlite_history"
+export NODE_REPL_HISTORY="$XDG_STATE_HOME/node_repl_history"
+export MYSQL_HISTFILE="$XDG_STATE_HOME/mysql_history"
+export HISTFILE="$XDG_STATE_HOME/bash_history"
+export OPEN_HISTFILE="$XDG_STATE_HOME/open_history"
+export CD_HISTFILE="$XDG_STATE_HOME/cd_history"
 
 # program configuration
 export LESS='-fiR --mouse --use-color -j 10 -Dd+r -Du+b'
@@ -56,7 +60,7 @@ export HTTP_HOME='https://www.duckduckgo.com'
 export CHROME_EXECUTABLE='chromium'
 export FZF_DEFAULT_COMMAND="find -H . ! -wholename '*.git*' ! \( -type d -printf '%p/\n' , ! -type d -print \)"
 export FZF_DEFAULT_OPTS="
-	--history='$XDG_DATA_HOME/fzf/history'
+	--history='$FZF_HISTFILE'
 	--preview='\$PREVIEWER {}' --preview-window=hidden
 	--bind 'ctrl-s:toggle-sort'
 	--bind 'ctrl-y:execute-silent(printf \"%s\\\n\" {+} | xsel --clipboard)'
@@ -75,18 +79,17 @@ export FZF_DEFAULT_OPTS="
 	--bind 'alt-g:preview-top,alt-G:preview-bottom'
 	--bind 'alt-s:execute(dmenu-send {})'
 	--bind 'alt-0:change-preview(echo {})'
-	--bind 'alt-1:change-preview(highlight --out-format=ansi -- {} 2>/dev/null ||
-		ls -Als --group-directories-first --color=always --classify=always -- {})'
+	--bind 'alt-1:change-preview(text-preview {})'
 	--bind 'alt-2:change-preview(\$PREVIEWER {})'
 	--bind 'alt-9:change-preview(printf \"%s\\\n\" {+})'
 	--bind 'alt-!:execute(less {})'
 	--bind 'alt-@:execute(\$PREVIEWER {} | less)'
-	--bind 'alt-v:execute(echo {q} >> \"$FZF_HIST_FILE\"; LESSOPEN=\"|preview %s\" less {})'
-	--bind 'alt-e:execute(echo {q} >> \"$FZF_HIST_FILE\"; eval \"\${EDITOR:-vi} {}\")'
-	--bind 'ctrl-o:execute(echo {q} >> \"$FZF_HIST_FILE\"; eval \"\${OPENER:-xdg-open} {}\")'
-	--bind 'alt-O:execute(echo {q} >> \"$FZF_HIST_FILE\"; mimeopen --ask {})'
-	--bind 'alt-o:execute(echo {q} >> \"$FZF_HIST_FILE\"; eval \"\${FILES:-lf} {}\")'
-	--bind 'alt-D:become(echo {q} >> \"$FZF_HIST_FILE\"; dirname {} )'
+	--bind 'alt-v:execute(echo {q} >> \"$FZF_HISTFILE\"; LESSOPEN=\"|preview %s\" less {})'
+	--bind 'alt-e:execute(echo {q} >> \"$FZF_HISTFILE\"; eval \"\${EDITOR:-vi} {}\")'
+	--bind 'ctrl-o:execute(echo {q} >> \"$FZF_HISTFILE\"; eval \"\${OPENER:-xdg-open} {}\")'
+	--bind 'alt-O:execute(echo {q} >> \"$FZF_HISTFILE\"; mimeopen --ask {})'
+	--bind 'alt-o:execute(echo {q} >> \"$FZF_HISTFILE\"; eval \"\${FILES:-lf} {}\")'
+	--bind 'alt-D:become(echo {q} >> \"$FZF_HISTFILE\"; dirname {} )'
 	"
 
 ## Custom themes for GTypist

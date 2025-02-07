@@ -16,7 +16,6 @@ alias se='sudoedit'
 alias lf='lfcd'
 alias rs='exec $SHELL'
 alias sr='ff ~/.config ~/.local/bin ~/bin'
-alias fh='fzf --tac < "${XDG_DATA_HOME:-$HOME/.local/share}/openhist"'
 
 alias uc='cd ~ && gitpush'
 alias gpu='gitpush'
@@ -24,7 +23,7 @@ alias gpu='gitpush'
 lt() { tree -aC --dirsfirst -I "$IGNORE_GLOB" "$@" | less -F; }
 dul() { du -ahd 1 "$@" | sort -h | less -FX; }
 v() { LESSOPEN="|preview %s" less -r -F "${1:-.}"; }
-ff() { FZF_DEFAULT_COMMAND="$FZF_DEFAULT_COMMAND $@" FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS $FO" fzf -m; }
+ff() { find -H "$@" ! -wholename '*.git*' ! \( -type d -printf '%p/\n' , ! -type d -print \) | fzf -m; }
 senv() { source "${XDG_DATA_HOME:-$HOME/.local/share}/virtualenvs/${1:-main}/bin/activate"; }
 
 sudoedit() {
@@ -85,4 +84,3 @@ alias grep='grep --color=auto'
 alias tree='tree -C --dirsfirst'
 alias ls='ls -h --group-directories-first --color=auto --classify=auto'
 alias info='info --vi-keys --init-file ~/.config/infokey'
-alias fd='fd --hidden'

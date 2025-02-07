@@ -1,0 +1,6 @@
+*.srt
+*.vtt
+*.description
+*.info.json
+*.live_chat.json
+*.yt*

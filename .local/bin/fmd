@@ -1,17 +1,30 @@
 #!/bin/sh
 
 # fzf-media: fuzzy search media files
-# Useful when you want to look through a list of video without having to
-# bother with their individual supplementary files like subtitles.
+# Useful for browsing video files without having to bother with
+# their subtitle files.
 
 export PREVIEW="${PREVIEW:-"cat \"\$(dirname {})/.description/\${\$(basename {})%.*}.txt\" 2>/dev/null || preview {}"}"
 
-fd -I --color=always --type=file --ignore-file="${XDG_CONFIG_HOME:-$HOME/.config}/ytignore" "$@" | sort |
-	fzf --multi --reverse \
-		--history="${FZF_HIST:=$HOME/.local/share/fzf/media_history}" \
+find_files() {
+	filter="${XDG_CONFIG_HOME:-$HOME/.config}/ytignore"
+	if command -v fd >/dev/null; then
+		fd -I --color=always --type=file --ignore-file="$filter" . "$@"
+	else
+		eval "find $* -type f ! -path '*/.*' $(sed -z "s/\(\S\+\)\n/! -name '\1' /g" "$filter")"
+	fi
+}
+
+[ -z "$FZF_HISTDIR" ] &&
+	export FZF_HISTDIR="${XDG_STATE_HOME:-$HOME/.local/state}/fzf"
+mkdir -pv "$FZF_HISTDIR"
+export FZF_HIST="$FZF_HISTDIR/${FMD_HIST_NAME:-media_history}"
+
+find_files "$@" | sort | fzf --multi --reverse --history="$FZF_HIST" \
 		--header="${FZF_HEADER:-Browse Media Files}" --header-first \
 		--preview="$PREVIEW" --preview-window=hidden \
-		--bind 'alt-C:execute( ffbrowser "$(mediainfo --inform="General;%Comment%" {})" )' \
+		--bind 'alt-C:execute(librewolf-open "$(mediainfo --inform="General;%Comment%" {})")' \
 		--bind 'ctrl-o:execute(append-to-history {q} "$FZF_HIST"; ${OPENER:-xdg-open} {})' \
 		--bind "alt-3:change-preview($PREVIEW)" \
-		--bind 'alt-#:execute($PREVIEW | less)'
+		--bind "alt-@:execute($PREVIEW | yad --text-info)"
+

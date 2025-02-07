@@ -126,7 +126,11 @@ else
 	get_pkgs() { list_pkgs; }
 fi
 
-[ -z "$FZF_HIST_DIR" ] && export FZF_HIST_DIR="$HOME/.local/share/fzf"
+[ -z "$FZF_HISTDIR" ] &&
+	export FZF_HISTDIR="${XDG_STATE_HOME:-$HOME/.local/state}/fzf"
+mkdir -pv "$FZF_HISTDIR"
+export FZF_HIST="$FZF_HISTDIR/package_history"
+
 fzff() {
 	preview='
 		echo "selected packages:";
@@ -135,7 +139,7 @@ fzff() {
 		eval "$pkg_info 2>/dev/null" {1}
 		'
 	fzf --ansi --multi \
-		--history="${FZF_HIST_DIR:-$HOME/.local/share}/package_history" \
+		--history="$FZF_HIST" \
 		--header="Select packages $opmsg" --header-first --prompt="$prompt> " \
 		--preview="$preview" --preview-window="hidden" --tiebreak='begin' \
 		--bind 'ctrl-v:toggle-preview,ctrl-space:toggle-preview'

@@ -11,8 +11,11 @@ if [ "$OPENFLAG" = 0 ]; then
 	esac; exit
 fi
 
-mkdir -pv "${XDG_DATA_HOME:=$HOME/.local/share}/fzf"
-export FZF_HIST="$XDG_DATA_HOME/fzf/grep_history"
+[ -z "$FZF_HISTDIR" ] &&
+	export FZF_HISTDIR="${XDG_STATE_HOME:-$HOME/.local/state}/fzf"
+mkdir -pv "$FZF_HISTDIR"
+export FZF_HIST="$FZF_HISTDIR/grep_history"
+
 grep -Rnsi --exclude-dir=.git --exclude-dir=node_modules --color=always "$@" |
 	fzf --ansi \
 		--history="$FZF_HIST" \
@@ -21,7 +24,7 @@ grep -Rnsi --exclude-dir=.git --exclude-dir=node_modules --color=always "$@" |
 		--preview-window="hidden" \
 		--bind 'ctrl-v:toggle-preview,ctrl-space:toggle-preview' \
 		--bind "ctrl-r:reload(grep -Rns --color=always $*)" \
-		--bind 'enter:execute(echo {} >> "$FZF_HIST"; OPENFLAG=0 fgrp {})' \
-		--bind 'alt-e:execute(echo {} >> "$FZF_HIST"; OPENFLAG=0 OPENWITH=${EDITOR:-vi} fgrp {})' \
-		--bind 'alt-o:execute(echo {} >> "$FZF_HIST"; OPENFLAG=0 OPENWITH=${OPENER:-xdg-open} fgrp {})' \
-		--bind 'alt-O:execute(echo {} >> "$FZF_HIST"; OPENFLAG=0 OPENWITH=${FILES:-lf} fgrp {})'
+		--bind 'enter:execute(append-to-history {} "$FZF_HIST"; OPENFLAG=0 fgrp {})' \
+		--bind 'alt-e:execute(append-to-history {} "$FZF_HIST"; OPENFLAG=0 OPENWITH=${EDITOR:-vi} fgrp {})' \
+		--bind 'alt-o:execute(append-to-history {} "$FZF_HIST"; OPENFLAG=0 OPENWITH=${OPENER:-xdg-open} fgrp {})' \
+		--bind 'alt-O:execute(append-to-history {} "$FZF_HIST"; OPENFLAG=0 OPENWITH=${FILES:-lf} fgrp {})'

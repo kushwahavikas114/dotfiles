@@ -3,6 +3,7 @@ cac	${XDG_CACHE_HOME:-$HOME/.cache}
 cg	${XDG_CONFIG_HOME:-$HOME/.config}
 lsh	${XDG_DATA_DIR:-$HOME/.local/share}
 vnv	${XDG_DATA_DIR:-$HOME/.local/share}/virtualenvs
+ltr	${XDG_DATA_DIR:-$HOME/.local/share}/Trash
 lsr	${XDG_DATA_DIR:-$HOME/.local/src}
 lst	${XDG_DATA_DIR:-$HOME/.local/state}
 dn	${XDG_DOWNLOAD_DIR:-$HOME/Downloads}
@@ -13,7 +14,7 @@ ms	${XDG_MUSIC_DIR:-$HOME/Music}
 px	${XDG_PICTURES_DIR:-$HOME/Pictures}
 vd	${XDG_VIDEOS_DIR:-$HOME/Videos}
 
-lb	~/.local/bin
+lbn	~/.local/bin
 bn	~/bin
 sd	~/sdcard
 rp	~/repos
@@ -29,7 +30,7 @@ vrp	~/Dev/sites/vikas.rocks/public
 td	~/Dev/test
 gd	~/GDrive/vartak/CS/sem6
 gf	~/GDrive/vartak/CS/sem6/practicals
-gp	~/GDrive/vartak/CS/sem6/journal
+gp	~/GDrive/vartak/CS/sem6/journals
 gz	~/GDrive/vartak/CS/practical-zip/sem5
 gn	~/GDrive/vartak/CS/sem6/notes
 rs	~/GDrive/vartak/results

@@ -8,7 +8,6 @@ alias find="2> >(grep -v 'Permission denied' >&2) find"
 source ~/.profile
 [ -n "$SDOTDIR" ] || SDOTDIR="${XDG_CONFIG_HOME:-$HOME/.config}/shell"
 [ -n "$ZDOTDIR" ] || ZDOTDIR="${XDG_CONFIG_HOME:-HOME/.config}/zsh"
-
 source "/usr/share/fzf/completion.zsh"
 source "$ZDOTDIR/command-tools.zsh"
 source "$ZDOTDIR/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
@@ -74,12 +73,18 @@ ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 ZSH_AUTOSUGGEST_ACCEPT_WIDGETS=(end-of-line vi-end-of-line vi-add-eol)
 ZSH_AUTOSUGGEST_PARTIAL_ACCEPT_WIDGETS+=(forward-char vi-forward-char)
 
-HISTFILE="${XDG_DATA_HOME:=$HOME/.local/share}/zsh/history"
+HISTFILE="${XDG_STATE_HOME:=$HOME/.local/state}/zsh/history"
 HISTSIZE=100000
 SAVEHIST=50000
 
 unset WORDCHARS
 stty -ixon
+
+[ -z "$CD_HISTFILE" ] &&
+	export CD_HISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/cd_history"
+
+[ -z "$OPEN_HISTFILE" ] &&
+	export OPEN_HISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/open_history"
 
 # Angular
 # _ng_yargs_completions()
@@ -105,8 +110,8 @@ _command_fail_hook() {
 add-zsh-hook precmd _command_fail_hook
 
 _cd_history_hook() {
-	sed -i "\|^$PWD$|d" "${XDG_DATA_HOME:-$HOME/.local/share}/cdhist"
-	echo "$PWD" >> "${XDG_DATA_HOME:-$HOME/.local/share}/cdhist"
+	sed -i "\|^$PWD$|d" "$CD_HISTFILE"
+	echo "$PWD" >> "$CD_HISTFILE"
 }
 add-zsh-hook -Uz chpwd _cd_history_hook
 
@@ -176,7 +181,7 @@ zle -N backward-delete-word-to-slash
 bindkey '^W' backward-delete-word-to-slash
 
 _fzf-file-history() {
-  LBUFFER="${LBUFFER}$(sed "s|$HOME|~|" "${XDG_DATA_HOME:-$HOME/.local/share}/openhist" | fzf --tac --reverse --height 40% | sed "s/ /\\\ /")"
+  LBUFFER="${LBUFFER}$(sed "s|$HOME|~|" "$OPEN_HISTFILE" | fzf --tac --reverse --height 40% | sed "s/ /\\\ /")"
   zle reset-prompt
 }
 zle     -N   fzf-file-history _fzf-file-history
@@ -196,7 +201,7 @@ zle     -N   fzf-cd-widget _fzf-cd-widget
 bindkey '^[c' fzf-cd-widget
 
 _cd-path-history() {
-	FZF_CD_COMMAND="< ${XDG_DATA_HOME:-$HOME/.local/share}/cdhist" \
+	FZF_CD_COMMAND="< $CD_HISTFILE" \
 		FZF_CD_OPTS="--tac --tiebreak=index --no-sort" \
 			zle fzf-cd-widget
 }
@@ -230,10 +235,11 @@ alias which-command='where'
 _get-help() {
 	cmd=(${=BUFFER})
 	zle push-line
-	case "${cmd[1]}" in
-		docker|gh|hugo|npm|git) BUFFER="help ${cmd[1]}-${cmd[2]}" ;;
-		*) BUFFER="get-help $cmd" ;;
-	esac
+	# case "${cmd[1]}" in
+	# 	docker|gh|hugo|npm|git|pip) BUFFER="help ${cmd[1]}-${cmd[2]}" ;;
+	# 	*) BUFFER="get-help $cmd" ;;
+	# esac
+	BUFFER="help ${cmd[1]}-${cmd[2]}"
 	zle accept-line
 }
 zle -N get-help _get-help
@@ -247,7 +253,7 @@ bindkey '^[H' get-help
 
 case "$TERM" in *256*)
 
-	command -V eza >/dev/null && {
+	command -v eza >/dev/null && {
 		export IGNORE_GLOB="$(tr '\n' '|' < "$XDG_CONFIG_HOME/fd/ignore")"
 		alias l='eza -aF --group-directories-first --color=always --icons'
 		alias ll='l -l'
@@ -256,13 +262,15 @@ case "$TERM" in *256*)
 			--icons=always -aTF -I "$IGNORE_GLOB" "$@" | less -rF; }
 	}
 
-	command -V fd >/dev/null && {
+	command -v fd >/dev/null && {
 		FZF_DEFAULT_COMMAND="fd --hidden --no-ignore-vcs --color=always $@"
 		FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --ansi"
+		ff() { FZF_DEFAULT_COMMAND+="$@" fzf -m; }
+		alias f='fd --hidden --no-ignore-vcs'
 		alias sr='fd --no-ignore-vcs --color=always . ~/.config ~/.local/bin ~/bin | fzf --ansi'
 	}
 
-	command -V starship >/dev/null && {
+	command -v starship >/dev/null && {
 		eval "$(starship init zsh)"
 		function set_win_title() {
 				echo -ne "\033]0; $USER@$HOST:${PWD/$HOME/~} \007"
@@ -277,6 +285,7 @@ alias sp='sudo pacman'
 alias sv='sudo sv'
 alias mmv='noglob zmv -W'
 alias s='sudo '
+alias fh='fzf --tac < "$OPEN_HISTFILE"'
 alias mirror='sudo reflector -f 30 -l 30 --number 10 --verbose --save /etc/pacman.d/mirrorlist-arch'
 alias mirrord='sudo reflector --latest 50 --number 20 --sort delay --save /etc/pacman.d/mirrorlist-arch'
 alias cleanup='sudo pacman -Rns $(pacman -Qtdq)'
@@ -286,7 +295,7 @@ alias typ='launch-gtypist -l "$(sed "/^gtypist lesson - \(.*\)$/!d; s//\1/" ~/Do
 alias typa='launch-gtypist -e 3 -l "$(sed "/^gtypist lesson - \(.*\)$/!d; s//\1/" ~/Documents/Notes/ak47.txt)"'
 
 # Find command package
-f() {
+F() {
 	ret=$?
 	[ -n "$1" ] && { pacman -F "$@"; return; }
 	[ "$ret" != 127 ] && echo "Return code of last command is not 127" >&2 && return 2
@@ -299,6 +308,15 @@ f() {
 #     ARGS="$@" && sudo bash -c "$(declare -f $1); $ARGS"
 # }
 # alias ssudo='sudofu '
+
+pyenvs() {
+	if [ "$PYENV_VIRTUALENV_INIT" != 1 ]; then
+		[[ -d $PYENV_ROOT/bin ]] && export PATH="$PYENV_ROOT/bin:$PATH"
+		eval "$(pyenv init - zsh)"
+		eval "$(pyenv virtualenv-init -)"
+	fi
+	pyenv activate "$1"
+}
 
 # Load syntax highlighter; should be last.
 source "/home/master/.config/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh"

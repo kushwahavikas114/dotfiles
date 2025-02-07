@@ -33,8 +33,10 @@ set preview
 cmd open $$OPENER $f
 
 cmd on-cd &{{
-	sed -i "\|^$PWD$|d" ${XDG_DATA_HOME:-$HOME/.local/share}/cdhist
-	echo "$PWD" >> ${XDG_DATA_HOME:-$HOME/.local/share}/cdhist
+	[ -z "$CD_HISTFILE" ] &&
+		export CD_HISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/cd_history"
+	sed -i "\|^$PWD$|d" "$CD_HISTFILE"
+	echo "$PWD" >> "$CD_HISTFILE"
 }}
 
 cmd delete ${{
@@ -109,9 +111,9 @@ map <tab> :toggle; down
 map <backtab> :toggle; up
 map Z :toggle; up
 map <c-j> select_eval "fzf --reverse --query '!/$ ' --header-first --header='Jump to location'"
-map <backspace> ${{ lf -remote "send $id select \"$(cat ${XDG_DATA_HOME:-$HOME/.local/share}/openhist |
+map <backspace> ${{ lf -remote "send $id select \"$(cat \"${OPEN_HISTFILE:-${XDG_STATE_HOME:-$HOME/.local/state}/open_history}\" |
 	fzf --tac --reverse --header-first --header='File History')\"" }}
-map <c-k> ${{ lf -remote "send $id cd \"$(cat ${XDG_DATA_HOME:-$HOME/.local/share}/cdhist |
+map <c-k> ${{ lf -remote "send $id cd \"$(cat ${CD_HISTFILE:-${XDG_STATE_HOME:-$HOME/.local/state}/cd_history} |
 	fzf --tac --reverse --header-first --header='Path History')\"" }}
 map <c-c> select_eval "fzf --reverse --query '/$ ' --header-first --header='Jump to directory'"
 
@@ -147,9 +149,7 @@ map gy %{{ printf "%s" "$fx" | xsel -b }}
 map gi link_index
 map gsb $setbg $f
 map zpp set previewer preview
-map zpc set previewer cat
-map zpb set previewer preview-bat
-map zph set previewer preview-highlight
+map zpt set previewer text-preview
 
 # Trash Mappings
 map dd  ${{ echo "$fx" | xargs -I{} trash-put "{}" }}

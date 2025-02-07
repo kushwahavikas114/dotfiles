@@ -9,10 +9,17 @@
 
 !/.config
 /.config/*
-!/.config/gh/config.yml
 
 shortcutrc
 shortcuts*
+
+!/.config/fdignore
+!/.config/ytignore
+!/.config/mimeapps.list
+!/.config/infokey
+!/.config/picom.conf
+!/.config/sdcv_ordering
+!/.config/starship.toml
 
 !/.config/shell
 /.config/shell/*
@@ -29,6 +36,27 @@ shortcuts*
 !/.config/zsh/zprofile
 !/.config/zsh/.zshrc
 
+!/.config/gh/config.yml
+
+!/.config/python
+/.config/python/*
+!/.config/python/pythonrc
+
+!/.config/ipython
+/.config/ipython/*
+!/.config/ipython/profile_default
+/.config/ipython/profile_default/*
+!/.config/ipython/profile_default/startup
+!/.config/ipython/profile_default/ipython_config.py
+
+!/.config/jupyter
+/.config/jupyter/*
+!/.config/jupyter/lab
+/.config/jupyter/lab/*
+!/.config/jupyter/lab/user-settings
+!/.config/jupyter/jupyter_console_config.py
+!/.config/jupyter/jupyter_notebook_config.py
+
 !/.config/terminal-colors.d
 !/.config/wget
 !/.config/htop
@@ -38,9 +66,6 @@ shortcuts*
 !/.config/lf
 !/.config/sc-im
 !/.config/yt-dlp
-!/.config/python
-!/.config/ipython
-!/.config/jupyter
 !/.config/git
 !/.config/fd
 
@@ -49,7 +74,6 @@ shortcuts*
 !/.config/gtk-4.0
 !/.config/lxsession
 !/.config/X11
-!/.config/mimeapps.list
 
 !/.config/i3
 !/.config/i3blocks

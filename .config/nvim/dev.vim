@@ -19,7 +19,6 @@ let g:coc_global_extensions = [
             \ 'coc-css',
             \ 'coc-tsserver',
             \ 'coc-pyright',
-            \ 'coc-java',
             \ 'coc-sh',
             \ ]
 nnoremap <silent><nowait> <leader>ca  :<C-u>CocList diagnostics<cr>
@@ -91,3 +90,5 @@ if exists('+termguicolors')
 	" autocmd VimEnter * AirlineTheme
 endif
 
+AirlineTheme
+CocList extensions

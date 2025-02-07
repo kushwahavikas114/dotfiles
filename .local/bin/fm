@@ -12,8 +12,10 @@ if [ "$OPENFLAG" = 0 ]; then
 	fi; exit
 fi
 
-mkdir -pv "${XDG_DATA_HOME:=$HOME/.local/share}/fzf"
-export FZF_HIST="${XDG_DATA_HOME:=$HOME/.local/share}/fzf/manual_history"
+[ -z "$FZF_HISTDIR" ] &&
+	export FZF_HISTDIR="${XDG_STATE_HOME:-$HOME/.local/state}/fzf"
+mkdir -pv "$FZF_HISTDIR"
+export FZF_HIST="$FZF_HISTDIR/manual_history"
 
 apropos -l "${@:-.}" | fzf --history="$FZF_HIST" --prompt="man: " \
 	--preview='MANWIDTH=$FZF_PREVIEW_COLUMNS OPENFLAG=0 fm {}' \
