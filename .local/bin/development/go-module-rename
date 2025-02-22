@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# go-module-rename <OLD_MODULE_NAME> <NEW_MODULE_NAME>
+
+go mod edit -module "$2"
+find . -type f -name '*.go' | xargs sed -i \
+	-e "s|\"$1/|\"$2/|g" \
+	-e "s|\"$1\"|\"$2\"|g"

@@ -58,7 +58,7 @@ cmd extract ${{
 				*.tar.gz|*.tgz) tar xzvf "$f" ;;
 				*.tar.xz|*.txz) tar xJvf "$f" ;;
 				*.gz) gunzip "$f" ;;
-				*.zip) unzip "$f" ;;
+				*.zip|*.epub) unzip "$f" ;;
 				*.rar) unrar x "$f" ;;
 				*.7z) 7z x "$f" ;;
 				*.zst) unzstd "$f" ;;
@@ -120,7 +120,7 @@ map <c-c> select_eval "fzf --reverse --query '/$ ' --header-first --header='Jump
 map c
 map d
 map I :rename; cmd-home
-map i :rename
+map i :rename; cmd-word-back; cmd-left
 map a :rename; cmd-right
 map A :rename; cmd-end
 map S push A<c-u>

@@ -5,7 +5,7 @@
 for file in "$@"; do
 	case "$file" in
 
-		*.pdf|*.djvu|*.epub) setsid -f zathura "$file" ;;
+		*.pdf|*.djvu|*.epub) setsid -f zathura "$file" 2>/dev/null ;;
 		*.png|*.jpg|*.jpeg|*.webp) setsid -f nsxiv "$file" ;;
 		*.gif|*.mkv|*.mp3|*.mp4|*.webm|*.ogg) ${PLAYER:-mpv --sub-auto=fuzzy} "$file" ;;
 		*.html) ${BROWSER:-w3m} "$file" ;;
@@ -25,7 +25,7 @@ for file in "$@"; do
 			case "$filetype" in
 				inode/directory) ${FILES:-lf} "$file" ; exit ;;
 				text/html*) ${BROWSER:-w3m} "$file" ;;
-				*pdf|*djvu|*epub+zip|*oxps|*fictionbook) setsid -f zathura "$file" ;;
+				*pdf|*djvu|*epub+zip|*oxps|*fictionbook) setsid -f zathura "$file" 2>/dev/null ;;
 				text/*|*json|*zip|*zstd) "${EDITOR:-nvim}" "$file" ;;
 				application/vnd.openxmlformats-officedocument.*) setsid -f libreoffice "$file" ;;
 				application/sc) sc-im "$file" ;;

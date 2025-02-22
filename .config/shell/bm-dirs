@@ -18,8 +18,8 @@ lbn	~/.local/bin
 bn	~/bin
 sd	~/sdcard
 rp	~/repos
+an	~/Android
 ap	~/Applications
-ad	~/Arduino
 dv	~/Dev
 cm	~/Dev/cloud-maker
 cs	~/Dev/sites/csstudent41.github.io
@@ -50,4 +50,5 @@ usr	${PREFIX:-/usr}
 ush	/usr/share
 usd	/usr/share/doc
 usha	/usr/share/applications
+tmp	/tmp
 tmu	/tmp/mozilla_${USER}0

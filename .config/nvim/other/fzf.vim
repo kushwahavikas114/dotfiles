@@ -14,6 +14,6 @@ imap <c-x><c-f> <plug>(fzf-complete-path)
 imap <c-x><c-l> <plug>(fzf-complete-line)
 
 " Fzf keybindings
-nnoremap <leader>ff   :Files<CR>
-nnoremap <leader>.   :Files %:p:h<CR>
+nnoremap <leader>ff  :Files<CR>
+nnoremap <leader>f.   :Files %:p:h<CR>
 

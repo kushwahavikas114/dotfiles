@@ -16,14 +16,15 @@ fi
 mkdir -pv "$FZF_HISTDIR"
 export FZF_HIST="$FZF_HISTDIR/grep_history"
 
-grep -Rnsi --exclude-dir=.git --exclude-dir=node_modules --color=always "$@" |
+cmd="grep -Rnsi --exclude-dir=.git --exclude-dir=node_modules --color=always"
+$cmd "$@" |
 	fzf --ansi \
 		--history="$FZF_HIST" \
 		--prompt="grep > " \
 		--preview='preview "$(echo {1} | cut -d: -f1)"' \
 		--preview-window="hidden" \
 		--bind 'ctrl-v:toggle-preview,ctrl-space:toggle-preview' \
-		--bind "ctrl-r:reload(grep -Rns --color=always $*)" \
+		--bind "ctrl-r:reload($cmd $*)" \
 		--bind 'enter:execute(append-to-history {} "$FZF_HIST"; OPENFLAG=0 fgrp {})' \
 		--bind 'alt-e:execute(append-to-history {} "$FZF_HIST"; OPENFLAG=0 OPENWITH=${EDITOR:-vi} fgrp {})' \
 		--bind 'alt-o:execute(append-to-history {} "$FZF_HIST"; OPENFLAG=0 OPENWITH=${OPENER:-xdg-open} fgrp {})' \

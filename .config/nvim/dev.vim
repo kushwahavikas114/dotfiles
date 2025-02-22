@@ -1,6 +1,12 @@
 source ~/.config/nvim/init.vim
 
 packadd! onedark.vim
+" packadd! fzf
+packadd! fzf.vim
+
+" --> Fzf
+source ~/.config/nvim/other/fzf.vim
+set rtp+=/usr/share/vim/vimfiles
 
 " --> Zeal docs
 let g:zv_disable_mapping = 1
@@ -89,6 +95,8 @@ if exists('+termguicolors')
 	colorscheme onedark
 	" autocmd VimEnter * AirlineTheme
 endif
+
+nnoremap <leader><C-r> :source ~/.config/nvim/dev.vim<CR>
 
 AirlineTheme
 CocList extensions

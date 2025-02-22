@@ -97,19 +97,14 @@ export FZF_DEFAULT_OPTS="
 # export GTYPIST_OPTS="--color 3,0 --banner-colors 0,2,4,1"  # green-yellow
 export GTYPIST_OPTS="--color 6,0 --banner-color 0,4,5,1"  # blue-cyan
 
-# # path
-# find -L ~/.local/share/gem/ruby/3.0.0/bin ~/.local/bin ~/bin \
-# 		-type d ! -wholename '*/.st*' |
-# 	while read -r dir; do
-# 		[ "$PATH" = "${PATH#*"$dir"}" ] && export PATH="$dir:$PATH"
-# 	done
-
 if [ "$PATH" = "${PATH#*"$HOME/.local/bin"}" ]; then
 	_build_path() { find -L "$@" -type d ! -wholename '*/.st*' ! -wholename '*.git*' -printf '%p:'; }
   [ -d ~/bin ] && export PATH="$(_build_path ~/bin)$PATH"
   [ -d ~/.local/bin ] && export PATH="$(_build_path ~/.local/bin)$PATH"
-  export PATH="$PATH:$XDG_DATA_HOME/gem/ruby/3.0.0/bin"
-  export PATH="$PATH:$HOME/Applications/flutter/bin"
+	for dir in \
+		"$XDG_DATA_HOME/gem/ruby/3.0.0/bin" \
+		"$GOPATH/bin"
+	do [ -d "$dir" ] && export PATH="$PATH:$dir"; done
 fi
 
 [ -n "$TERMUX_VERSION" ] && {

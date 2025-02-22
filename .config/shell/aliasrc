@@ -17,7 +17,7 @@ alias lf='lfcd'
 alias rs='exec $SHELL'
 alias sr='ff ~/.config ~/.local/bin ~/bin'
 
-alias uc='cd ~ && gitpush'
+alias uc='cd ~ && gitpush'  # update config
 alias gpu='gitpush'
 
 lt() { tree -aC --dirsfirst -I "$IGNORE_GLOB" "$@" | less -F; }

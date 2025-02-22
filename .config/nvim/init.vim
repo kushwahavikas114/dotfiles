@@ -17,21 +17,15 @@ if filereadable(config_dir . "autoload/plug.vim")
 	Plug 'xuhdev/vim-latex-live-preview', {'for': 'tex'}
 	Plug 'ap/vim-css-color'  " color code highlighting
 	Plug 'neoclide/coc.nvim',        {'on': ['CocList', 'CocConfig'], 'branch': 'release'}
-	" Plug 'KabbAmine/zeavim.vim'  ",     {'on': ['Zeavim', 'ZeavimV', 'ZVVisSelection', 'ZVOperator', 'ZVKeyDocset']}
 	" Plug 'machakann/vim-verdin',     {'for': 'vim'}
+	" Plug 'fatih/vim-go',             {'for': 'go'}
 	" Plug 'puremourning/vimspector',   {'for': 'python'}
-	" Plug 'powerman/vim-plugin-AnsiEsc'
-	" Plug 'junegunn/goyo.vim',        {'on': 'Goyo'}
 	" Plug 'jreybert/vimagit'
-	" Plug 'lukesmithxyz/vimling'
-	" Plug 'vimwiki/vimwiki'
 	Plug 'vim-airline/vim-airline',  {'on': 'AirlineTheme'}
-	Plug 'vim-airline/vim-airline-themes',   {'on': 'AirlineTheme'}
-	" Plug 'joshdick/onedark.vim'
 
-	Plug 'pangloss/vim-javascript'
-	Plug 'leafgarland/typescript-vim'
-	Plug 'peitalin/vim-jsx-typescript'
+	" Plug 'pangloss/vim-javascript'
+	" Plug 'leafgarland/typescript-vim'
+	" Plug 'peitalin/vim-jsx-typescript'
 	" Plug 'styled-components/vim-styled-components', { 'branch': 'main' }
 	" Plug 'jparise/vim-graphql'
 
@@ -63,7 +57,8 @@ autocmd FileType sql  setlocal commentstring=--\ %s
 autocmd BufEnter bm-files,bm-dirs setlocal tabstop=8 shiftwidth=8
 autocmd BufWritePost bm-files,bm-dirs silent !shortcuts
 autocmd VimLeave *.tex !dev clean "%"
-" autocmd BufWritePost config.h,config.def.h !cd "%:h"; rm -f config.h; sudo make install
+autocmd BufWritePost config.def.h !cd "%:h"; rm -f config.h; sudo make install
+autocmd BufWritePost config.h !cd "%:h"; sudo make install
 autocmd BufWritePre  * %s/\s\+$//e
 au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal! g`\"" | endif
 
@@ -98,10 +93,10 @@ let g:NERDTreeHijackNetrw = 0
 let g:lf_width = 1.0
 let g:lf_height = 1.0
 let g:lf_map_keys = 0
-nnoremap <Esc>o     :LfCurrentFile<CR>
-nnoremap <Esc>l     :LfWorkingDirectory<CR>
-nnoremap <leader>o  :LfCurrentFileNewTab<CR>
-nnoremap <leader>l  :LfWorkingDirectoryExistingOrNewTab<CR>
+nnoremap <Esc>l     :LfCurrentFile<CR>
+nnoremap <Esc>o     :LfWorkingDirectory<CR>
+nnoremap <leader>l  :LfCurrentFileNewTab<CR>
+nnoremap <leader>o  :LfWorkingDirectoryExistingOrNewTab<CR>
 
 if !exists('g:lasttab')
   let g:lasttab = 1
@@ -129,14 +124,14 @@ inoremap jk <Esc>
 inoremap ;n <Esc>/<++><Enter>c4l
 nnoremap <leader>n /<++><Enter>c4l
 
-autocmd FileType html,markdown inoremap ;s ><Esc>bi<<Esc>ea
-autocmd FileType html,markdown inoremap ;c ><Esc>bi</<Esc>ea
-autocmd FileType html,markdown inoremap ;i <Esc>b"tywi<<Esc>ea></><Esc>PF<i
-autocmd FileType html,markdown inoremap ;I <Esc>b"tywi<<Esc>ea><++></><Esc>P2F>i<Space>
-autocmd FileType html,markdown inoremap ;b <Esc>b"tywi<<Esc>ea><CR></<Esc>"tpa><CR><++><Esc>kO
-autocmd FileType html,markdown inoremap ;B <Esc>b"tywi<<Esc>ea><CR><++><CR></<Esc>"tpa><CR><++><Esc>3k$i<Space>
-autocmd FileType html,markdown inoremap ;ap <p><CR><++><CR></p><CR><++><Esc>3k$i
-autocmd FileType html,markdown inoremap ;aa <a href=""><CR><++><CR></a><CR><++><Esc>3k$hi
+autocmd FileType html,markdown,template inoremap ;s ><Esc>bi<<Esc>ea
+autocmd FileType html,markdown,template inoremap ;c ><Esc>bi</<Esc>ea
+autocmd FileType html,markdown,template inoremap ;i <Esc>b"tywi<<Esc>ea></><Esc>PF<i
+autocmd FileType html,markdown,template inoremap ;I <Esc>b"tywi<<Esc>ea><++></><Esc>P2F>i<Space>
+autocmd FileType html,markdown,template inoremap ;b <Esc>b"tywi<<Esc>ea><CR></<Esc>"tpa><CR><++><Esc>kO
+autocmd FileType html,markdown,template inoremap ;B <Esc>b"tywi<<Esc>ea><CR><++><CR></<Esc>"tpa><CR><++><Esc>3k$i<Space>
+autocmd FileType html,markdown,template inoremap ;ap <p><CR><++><CR></p><CR><++><Esc>3k$i
+autocmd FileType html,markdown,template inoremap ;aa <a href=""><CR><++><CR></a><CR><++><Esc>3k$hi
 
 autocmd FileType tex inoremap ;b <Esc>b"tywi\begin{<Esc>ea}<CR>\end{<Esc>"tpa}<Esc>kA
 autocmd FileType tex inoremap ;s \section{}<Esc>i
@@ -151,9 +146,11 @@ autocmd FileType go inoremap ;ae err<Space>:=<Space><++><CR>if<Space>err<Space>!
 
 nnoremap <leader>fl :w<CR>:!dev lint "%"<CR>
 nnoremap <leader>fm :w<CR>:%!dev format "%"<CR>
+nnoremap <leader>fM :w<CR>:%!dev minify "%"<CR>
 nnoremap <leader>fc :w<CR>:!dev compile "%"<CR>
 nnoremap <leader>fe :w<CR>:!dev run "%"<CR>
 nnoremap <leader>ft :w<CR>:!dev test "%"<CR>
+nnoremap <leader>fb :w<CR>:!dev build "%"<CR>
 nnoremap <leader>fr :w<CR>:!dev clean "%"<CR>
 
 nnoremap <leader>Fl :w<CR>:T dev lint "%"<CR>
@@ -163,9 +160,10 @@ nnoremap <leader>Fe :w<CR>:T dev run "%"<CR>
 nnoremap <leader>Ft :w<CR>:T dev test "%"<CR>
 nnoremap <leader>Fr :w<CR>:T dev clean "%"<CR>
 
+autocmd BufEnter * nmap <leader>b :w<CR>:se nornu<CR>:!dev build "%"<CR>:se rnu<CR>
+autocmd BufEnter * nmap <leader>B :w<CR>:se nornu<CR>:T dev build "%"<CR>
 autocmd BufEnter * nmap <leader>t :w<CR>:se nornu<CR>:!dev test "%"<CR>:se rnu<CR>
 autocmd BufEnter * nmap <leader>T :w<CR>:se nornu<CR>:T dev test "%"<CR>
-autocmd BufEnter * imap <F5> <Esc>:w<CR>:se nornu<CR>:T dev test "%"<CR>
 
 autocmd BufEnter vartak-results-data.pl nmap <leader>t :w<CR>:se nornu<CR>:!vartak-results-data.pl ~/GDrive/vartak/results/university/1S002557.pdf<CR>:se rnu<CR>
 
@@ -174,8 +172,6 @@ nnoremap <leader>fo :!opout "%:p"<CR>
 nnoremap <leader>ec :tabnew ~/.config/nvim/init.vim<CR>
 nnoremap <leader><C-r> :source ~/.config/nvim/init.vim<CR>
 nnoremap <leader>s :%s//gc<Left><Left><Left>
-nnoremap <leader>r :w<CR>:!%:p<CR>
-nnoremap <leader>R :w<CR>:T %:p<CR>
 
 nnoremap <leader>gc :T git add --all && git commit<CR>
 

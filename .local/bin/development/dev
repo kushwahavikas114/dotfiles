@@ -3,24 +3,26 @@
 err() { [ "$DEV_SUPRESS_ERRORS" = 1 ] ||
 	printf "dev: %s\n" "$@" >&2; exit 5; }
 
-[ "$#" -lt 2 ] && { err "dev - execute action based on file
-USAGE: dev <ACTION> <FILE> [ARGS...]"; }
+[ "$#" -lt 2 ] && { err "dev - execute task based on file
+USAGE: dev <TASK> <FILE> [ARGS...]"; }
 
-action="$1"
+task="$1"
 file="$2"
-basename="${file##*/}"
+file_base="${file##*/}"
+file_ext="${file_base##*.}"
 shift 2
 
 [ -e "$file" ] || err "$file: No such file or directory"
 
 # auxilary functions
 findweb() { find "$@" -or -name '*.html'; }
+watchcmd() { entr -r sh -c "echo; date; printf '\n$ %s\n' '$1'; $1"; }
 
 
 
-### #################################################################
+#####################################################################
 ### BEGIN TASKS
-### #################################################################
+#####################################################################
 
 sh_lint() { shellcheck -x "$file"; }
 sh_run() { $(sed -n '1s|^#!/.*/\(.*\)|\1|p' "$file") "$file" "$@"; }
@@ -37,7 +39,11 @@ cls_compile() { file="${file%.cls}.tex"; tex_compile "$@"; }
 html_format() { tidy -q "$file" 2>/dev/null; }
 html_lint() { tidy -q "$file" >/dev/null; }
 html_run() { w3m "$file"; }
+css_format() { esbuild "$file"; }
+css_minify() { esbuild --minify "$file"; }
 js_test() { node "$file"; }
+js_format() { esbuild "$file"; }
+js_minify() { esbuild --minify "$file"; }
 json_format() { jq . "$file"; }
 php_run() { php "$file" "$@"; }
 
@@ -50,7 +56,7 @@ go_lint() { gofmt -d "$file"; }
 go_compile() { go build "$file"; }
 go_run() { "$(realpath "${file%.go}")" "$@"; }
 go_test() { TMPDIR=~/.cache/go-tmp go run "$file" "$@"; }
-go_serve() { findweb . -name '*.go' | entr -r sh -c "printf '\n\n$ go run *.go\n'; dev test *.go"; }
+go_serve() { findweb . -name '*.go' | watchcmd "go run '$file'"; }
 
 c_test() {
 	out="${file%.c}"
@@ -113,7 +119,6 @@ kt_test() {
 py_format() { autopep8 "$file"; }
 py_formatin() { autopep8 -i "$file"; }
 
-py_serve() { findweb . -name '*.py' | entr -r python "$file"; }
 # py_lint() {
 # 	[ -t 1 ] && printf '\033[33m'
 # 	pycodestyle "$file" >&2
@@ -129,9 +134,23 @@ py_run() {
 	# fi
 }
 
-### #################################################################
+## Default Tasks
+
+_serve() {
+	[ "$file_ext" != "$file_base" ] && FINDCMD="-name '*.$file_ext'"
+	eval "findweb -name '$file' $FINDCMD" | watchcmd "${@:-dev test $file}"
+}
+
+_build() {
+	if [ -f mimetype ]; then
+		[ "$(cat mimetype)" = "application/epub+zip" ] || return 5
+		zip -Xr9D "../${PWD##*/}.epub" mimetype *
+	fi
+}
+
+#####################################################################
 ### END TASKS
-### #################################################################
+#####################################################################
 
 
 
@@ -145,22 +164,24 @@ case $filetype in
 	application/json)       filetype_ext="json" ;;
 	text/x-php)             filetype_ext="php" ;;
 	text/x-awk)             filetype_ext="awk" ;;
+	*)                      filetype_ext="NULL" ;;
 esac
 
-if [ "${basename#*.}" != "${basename}" ]; then
-	file_ext="${basename##*.}"
-else
-	[ -z "$filetype_ext" ] && err "no file type association for $filetype"
+if [ "$file_ext" = "$file_base" ]; then
+	[ "$filetype_ext" = "NULL" ] && err "no file type association for $filetype"
 	NO_BASENAME=1
 fi
 
 execute_task() {
-	file_task="${file_ext}_${action}"
-	filetype_task="${filetype_ext}_${action}"
+	file_task="${file_ext}_${task}"
+	filetype_task="${filetype_ext}_${task}"
+	default_task="_${task}"
 	if [ "$NO_BASENAME" != 1 ] && [ "${tasks#*"[$file_task]"}" != "$tasks" ]; then
-		$file_task; ret=$?
+		$file_task "$@"; ret=$?
 	elif [ "${tasks#*"[$filetype_task]"}" != "$tasks" ]; then
-		$filetype_task; ret=$?
+		$filetype_task "$@"; ret=$?
+	elif [ "${tasks#*"[$default_task]"}" != "$tasks" ]; then
+		$default_task "$@"; ret=$?
 	else
 		return 1
 	fi
@@ -170,13 +191,13 @@ execute_task() {
 
 tasks="$(sed -n "/^### BEGIN TASKS$/,/^### END TASKS$/ s/\(^[a-zA-Z0-9_]\+\)().*/[\1]/p" "$0")"
 
-if [ "$action" = test ]; then
-	execute_task && exit
-	for action in lint compile run; do
-		execute_task && tested=1
+if [ "$task" = test ]; then
+	execute_task "$@" && exit
+	for task in lint compile run; do
+		execute_task "$@" && tested=1
 	done
 	[ "$tested" != 1 ] && err "no tests for .${file_ext:-$filetype_ext} file"
 	exit 0
 fi
 
-execute_task || err "no $action action for .${file_ext:-$filetype_ext} file"
+execute_task "$@" || err "no $task task for .${file_ext:-$filetype_ext} file"

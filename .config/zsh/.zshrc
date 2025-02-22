@@ -286,6 +286,7 @@ alias sv='sudo sv'
 alias mmv='noglob zmv -W'
 alias s='sudo '
 alias fh='fzf --tac < "$OPEN_HISTFILE"'
+alias ide='nvim -u "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/dev.vim"'
 alias mirror='sudo reflector -f 30 -l 30 --number 10 --verbose --save /etc/pacman.d/mirrorlist-arch'
 alias mirrord='sudo reflector --latest 50 --number 20 --sort delay --save /etc/pacman.d/mirrorlist-arch'
 alias cleanup='sudo pacman -Rns $(pacman -Qtdq)'
@@ -293,6 +294,14 @@ alias fixpacman='sudo rm /var/lib/pacman/db.lck'
 alias gtypist="gtypist $GTYPIST_OPTS"
 alias typ='launch-gtypist -l "$(sed "/^gtypist lesson - \(.*\)$/!d; s//\1/" ~/Documents/Notes/QuickNote.md)"'
 alias typa='launch-gtypist -e 3 -l "$(sed "/^gtypist lesson - \(.*\)$/!d; s//\1/" ~/Documents/Notes/ak47.txt)"'
+
+# Launch new (W)indow in background
+W() {
+	windowid="$(xdotool getactivewindow)"
+	setsid -f $TERMINAL >/dev/null 2>&1
+	while [ "$(xdotool getactivewindow)" = "$windowid" ]; do sleep 0.1; done
+	xdotool windowfocus "$windowid"
+}
 
 # Find command package
 F() {
