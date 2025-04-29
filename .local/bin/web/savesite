@@ -23,6 +23,7 @@ printf ":: Logging to: %s\n" "$WGETLOGS"
 		--restrict-file-names=windows \
 		--domains "$site" \
 		--no-parent \
+		--no-check-certificate \
 		--output-file "$WGETLOGS" \
 		"$url"
 

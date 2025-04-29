@@ -10,9 +10,6 @@
 !/.config
 /.config/*
 
-shortcutrc
-shortcuts*
-
 !/.config/fdignore
 !/.config/ytignore
 !/.config/mimeapps.list
@@ -94,3 +91,7 @@ shortcuts*
 !/.local/share/applications
 /.local/share/applications/mimeinfo.cache
 !/.local/share/chars
+
+shortcutrc
+shortcuts*
+*.sync-conflict-*

@@ -45,6 +45,7 @@ js_test() { node "$file"; }
 js_format() { esbuild "$file"; }
 js_minify() { esbuild --minify "$file"; }
 json_format() { jq . "$file"; }
+xml_format() { xmllint -format -recover "$file"; }
 php_run() { php "$file" "$@"; }
 
 c_compile() { make "${file%.c}"; }
@@ -133,6 +134,8 @@ py_run() {
 	# 	python "$file" "$@"
 	# fi
 }
+
+R_run() { Rscript "$file"; }
 
 ## Default Tasks
 

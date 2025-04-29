@@ -1,7 +1,0 @@
-#!/bin/sh
-
-# build site
-
-cd "${SITE_BASE_DIR:-$HOME/Dev/sites/vikas.rocks}" || exit
-rm -rf public/*
-hugo

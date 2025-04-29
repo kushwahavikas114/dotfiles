@@ -22,29 +22,15 @@ lock_desktop() {
 }
 
 case "$command" in
-    lock)
-        lock_desktop
-				xset dpms force off
-        ;;
-    logout)
-				switch-session
-        i3-msg exit
-        ;;
-    switch_user)
-        dm-tool switch-to-greeter
-        ;;
-    suspend)
-        lock_desktop; $logind suspend
-        ;;
-    hibernate)
-        system_control lock_desktop && $logind hibernate
-        ;;
-    reboot)
-        system_control $logind reboot
-        ;;
-    shutdown)
-        system_control $logind poweroff
-        ;;
+    off)          xset dpms force off ;;
+    lock)         lock_desktop; xset dpms force off ;;
+    logout)       switch-session; i3-msg exit ;;
+    switch_user)  dm-tool switch-to-greeter ;;
+    suspend)      $logind suspend ;;
+    sleep)        lock_desktop; $logind suspend ;;
+    hibernate)    system_control lock_desktop && $logind hibernate ;;
+    reboot)       system_control $logind reboot ;;
+    shutdown)     system_control $logind poweroff ;;
     *)
         echo "== ! i3exit: missing or invalid argument ! =="
         echo "Try again with: lock | logout | switch_user | suspend | hibernate | reboot | shutdown"

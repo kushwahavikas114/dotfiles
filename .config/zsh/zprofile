@@ -9,9 +9,9 @@ on_ac_power="$(cat /sys/class/power_supply/ACAD/online)"
 
 case "$TTY" in
 	/dev/tty1)
-		 command -V optimus-manager >/dev/null && [ "$on_ac_power" = 1 ] {
+		 command -V optimus-manager >/dev/null && [ "$on_ac_power" = 1 ] && {
 			echo "Waiting for nvidia card to load up..."
-			until [ -e /dev/dri/card0 ]; do; sleep 0.1; done
+			until [ -e /dev/dri/card1 ]; do; sleep 0.1; done
 		}
 		command -V startx >/dev/null && { pgrep startx || startx }
 		;;

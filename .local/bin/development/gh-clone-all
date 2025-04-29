@@ -1,0 +1,16 @@
+#!/bin/sh
+
+cntx="${1%%/*}"
+name="${1##*/}"
+max="${2:-${MAX:-1}}"
+[ "$cntx" = "$name" ] && cntx=users
+[ -z "$cntx" ] && cntx=users
+[ -z "$name" ] && name=${PWD##*/}
+
+page=0
+while [ "$page" -lt "$max" ]; do
+	page=$(( page + 1 ))
+	curl "https://api.github.com/$cntx/$name/repos?page=$page&per_page=100" |
+		sed -E '/^\s*"clone_url": "(.*)",$/!d; s//\1/' |
+		xargs -L1 echo git clone
+done

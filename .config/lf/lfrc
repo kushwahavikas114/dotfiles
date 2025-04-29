@@ -57,12 +57,12 @@ cmd extract ${{
 				*.tar.bz|*.tar.bz2|*.tbz|*.tbz2) tar xjvf "$f" ;;
 				*.tar.gz|*.tgz) tar xzvf "$f" ;;
 				*.tar.xz|*.txz) tar xJvf "$f" ;;
-				*.gz) gunzip "$f" ;;
-				*.zip|*.epub) unzip "$f" ;;
 				*.rar) unrar x "$f" ;;
 				*.7z) 7z x "$f" ;;
 				*.zst) unzstd "$f" ;;
-				*) echo "Unsupported format" >&2; exit 1 ;;
+				*.gz) gunzip "$f" ;;
+				*) unzip "$f" ;;
+				# *) echo "Unsupported format" >&2; exit 1 ;;
 		esac done
 }}
 
@@ -110,12 +110,12 @@ map <a-s> :source ~/.config/lf/lfrc
 map <tab> :toggle; down
 map <backtab> :toggle; up
 map Z :toggle; up
-map <c-j> select_eval "fzf --reverse --query '!/$ ' --header-first --header='Jump to location'"
-map <backspace> ${{ lf -remote "send $id select \"$(cat \"${OPEN_HISTFILE:-${XDG_STATE_HOME:-$HOME/.local/state}/open_history}\" |
-	fzf --tac --reverse --header-first --header='File History')\"" }}
+map <c-j> select_eval "fzf --reverse --track --header-first --header='Jump to location' --query \"^${f##*/}$\" --bind 'load:change-query(!/$ )'"
+map <backspace> ${{ lf -remote "send $id select \"$(cat "${OPEN_HISTFILE:-${XDG_STATE_HOME:-$HOME/.local/state}/open_history}" |
+	fzf --reverse --tac --header-first --header='File History')\"" }}
 map <c-k> ${{ lf -remote "send $id cd \"$(cat ${CD_HISTFILE:-${XDG_STATE_HOME:-$HOME/.local/state}/cd_history} |
-	fzf --tac --reverse --header-first --header='Path History')\"" }}
-map <c-c> select_eval "fzf --reverse --query '/$ ' --header-first --header='Jump to directory'"
+	fzf --reverse --tac --header-first --header='Path History')\"" }}
+map <c-c> select_eval "fzf --reverse --track --header-first --header='Jump to location' --query \"^${f##*/}/$\" --bind 'load:change-query(/$ )'"
 
 map c
 map d
@@ -128,16 +128,17 @@ map o $LESSOPEN="|preview %s" less -r $f
 map O $mimeopen --ask $f
 map . set hidden!
 map x cut
-map M $lf -remote "send $id select \"$(fmd)\""
+map M $lf -remote "send $id select \"$(FZF_DEFAULT_OPTS="--track --query '^${f##*/}$' --bind 'load:clear-query'" fmd)\""
 map D delete
 map W $setsid -f $TERMINAL >/dev/null 2>&1
 map X !$f
-map T !dev test $f
+map T push :$touch<space>""<c-b>
 map b $vidir
 map V push :!nvim<space>""<c-b>
 map P :link
 
 map ge extract
+map gz $file="${f#"$PWD/"}"; zip -r "$file" "$file"
 map gl clear
 map gx ${{ chmod +x $fx; lf -remote "send $id reload"; }}
 map gX ${{ chmod -x $fx; lf -remote "send $id reload"; }}
@@ -148,6 +149,7 @@ map gf !{{ file "$f" && file --brief --mime-type "$f" }}
 map gy %{{ printf "%s" "$fx" | xsel -b }}
 map gi link_index
 map gsb $setbg $f
+map gcp $soffice --headless --convert-to pdf $f
 map zpp set previewer preview
 map zpt set previewer text-preview
 

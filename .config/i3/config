@@ -17,7 +17,7 @@
 # pulseaudio system tray
 # exec --no-startup-id pasystray
 
-exec st -c dropdown_tmuxdd -e tmux
+exec st -c dropdown_tmuxdd -e tmux new -A -s ddterm
 
 ################################
 ### Commonly Used Variables: ###
@@ -67,7 +67,7 @@ bindsym $super+F7 exec --no-startup-id sh -c 'find ~/.librewolf -mindepth 1 -max
 bindsym $super+b exec --no-startup-id librewolf-open
 bindsym $super+c exec --no-startup-id edit-graphical-buffer
 bindsym $super+x exec --no-startup-id toggle-xeyes
-bindsym $super+i exec --no-startup-id sh -c 'xdotool type "$(grep -v "^#\|^\s*$" ~/Documents/Notes/bookmarks.txt | tac | dmenu -i -l 50 | cut -d\  -f1)"'
+bindsym $super+i exec --no-startup-id sh -c 'xdotool type "$(grep -v "^#\|^\s*$" ~/Documents/Notes/bookmarks.txt | tac | dmenu -i -l 50 | cut -d# -f1)"'
 bindsym $super+Shift+z exec --no-startup-id dmenu-zeal
 bindsym $super+Shift+b exec --no-startup-id librewolf-open "$(xprint)"
 bindsym $super+Shift+v exec --no-startup-id st -c "dropdown_clipboard" -e sh -c 'xclip -sel clip -o >/tmp/clipboard && nvim /tmp/clipboard && xclip -sel clip -i /tmp/clipboard || read -r ans'
@@ -625,12 +625,14 @@ mode "$mode_gaps_outer" {
 bindsym $super+BackSpace mode "$mode_system"
 set $mode_system (l)ock  (e)xit  switch_(u)ser  (s)uspend  (h)ibernate  (r)eboot  (Shift+s)hutdown
 mode "$mode_system" {
+    bindsym o exec --no-startup-id i3exit off, mode "default"
     bindsym l exec --no-startup-id i3exit lock, mode "default"
     bindsym e exec --no-startup-id i3exit logout, mode "default"
     bindsym u exec --no-startup-id i3exit switch_user, mode "default"
     bindsym s exec --no-startup-id i3exit suspend, mode "default"
     bindsym h exec --no-startup-id i3exit hibernate, mode "default"
     bindsym r exec --no-startup-id i3exit reboot, mode "default"
+    bindsym $alt+s exec --no-startup-id i3exit sleep, mode "default"
     bindsym Shift+s exec --no-startup-id i3exit shutdown, mode "default"
 
     # exit system mode: "Enter" or "Escape"

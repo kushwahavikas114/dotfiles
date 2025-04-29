@@ -1,8 +1,0 @@
-#!/bin/sh
-
-remap -x
-adb connect blue:43896
-notify-send scrcpy-k "Starting scrcpy..."
-scrcpy -K --no-playback
-notify-send scrcpy-k "Connection closed..."
-remap

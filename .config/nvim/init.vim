@@ -124,23 +124,26 @@ inoremap jk <Esc>
 inoremap ;n <Esc>/<++><Enter>c4l
 nnoremap <leader>n /<++><Enter>c4l
 
-autocmd FileType html,markdown,template inoremap ;s ><Esc>bi<<Esc>ea
-autocmd FileType html,markdown,template inoremap ;c ><Esc>bi</<Esc>ea
-autocmd FileType html,markdown,template inoremap ;i <Esc>b"tywi<<Esc>ea></><Esc>PF<i
-autocmd FileType html,markdown,template inoremap ;I <Esc>b"tywi<<Esc>ea><++></><Esc>P2F>i<Space>
-autocmd FileType html,markdown,template inoremap ;b <Esc>b"tywi<<Esc>ea><CR></<Esc>"tpa><CR><++><Esc>kO
-autocmd FileType html,markdown,template inoremap ;B <Esc>b"tywi<<Esc>ea><CR><++><CR></<Esc>"tpa><CR><++><Esc>3k$i<Space>
-autocmd FileType html,markdown,template inoremap ;ap <p><CR><++><CR></p><CR><++><Esc>3k$i
-autocmd FileType html,markdown,template inoremap ;aa <a href=""><CR><++><CR></a><CR><++><Esc>3k$hi
+inoremap ;s ><Esc>bi<<Esc>ea
+inoremap ;c ><Esc>bi</<Esc>ea
+inoremap ;i <Esc>b"tywi<<Esc>ea></><Esc>PF<i
+inoremap ;I <Esc>b"tywi<<Esc>ea><++></><Esc>P2F>i<Space>
+inoremap ;b <Esc>b"tywi<<Esc>ea><CR></<Esc>"tpa><CR><++><Esc>kO
+inoremap ;B <Esc>b"tywi<<Esc>ea><CR><++><CR></<Esc>"tpa><CR><++><Esc>3k$i<Space>
+inoremap ;ap <p><CR><++><CR></p><CR><++><Esc>3k$i
+inoremap ;aa <a href=""><CR><++><CR></a><CR><++><Esc>3k$hi
 
-autocmd FileType tex inoremap ;b <Esc>b"tywi\begin{<Esc>ea}<CR>\end{<Esc>"tpa}<Esc>kA
-autocmd FileType tex inoremap ;s \section{}<Esc>i
-autocmd FileType tex inoremap ;at \begin{tikzpicture}<CR>\end{tikzpicture}<Esc>O
-autocmd FileType tex inoremap ;ap \usepackage{}<Esc>i
-autocmd FileType tex inoremap ;aP \usepackage[]{}<Esc>F[a
-autocmd FileType tex inoremap ;ab \textbf{}<Esc>i
-autocmd FileType tex inoremap ;ai \textit{}<Esc>i
-autocmd FileType tex inoremap ;au \underline{}<Esc>i
+augroup Tex
+	autocmd!
+	autocmd FileType tex inoremap ;b <Esc>b"tywi\begin{<Esc>ea}<CR>\end{<Esc>"tpa}<Esc>kA
+	autocmd FileType tex inoremap ;s \section{}<Esc>i
+	autocmd FileType tex inoremap ;at \begin{tikzpicture}<CR>\end{tikzpicture}<Esc>O
+	autocmd FileType tex inoremap ;ap \usepackage{}<Esc>i
+	autocmd FileType tex inoremap ;aP \usepackage[]{}<Esc>F[a
+	autocmd FileType tex inoremap ;ab \textbf{}<Esc>i
+	autocmd FileType tex inoremap ;ai \textit{}<Esc>i
+	autocmd FileType tex inoremap ;au \underline{}<Esc>i
+augroup END
 
 autocmd FileType go inoremap ;ae err<Space>:=<Space><++><CR>if<Space>err<Space>!=<Space>nil<Space>{<CR>return<Space>err<CR>}<Esc>3kI
 
@@ -169,7 +172,10 @@ autocmd BufEnter vartak-results-data.pl nmap <leader>t :w<CR>:se nornu<CR>:!vart
 
 nnoremap <leader>w :set wrap!<CR>
 nnoremap <leader>fo :!opout "%:p"<CR>
-nnoremap <leader>ec :tabnew ~/.config/nvim/init.vim<CR>
+nnoremap <leader>ei :tabnew ~/.config/nvim/init.vim<CR>
+nnoremap <leader>eo :tabnew ~/.config/nvim/coc/coc-onload.vim<CR>
+nnoremap <leader>ec :tabnew ~/.config/nvim/coc/coc-settings.json<CR>
+nnoremap <leader>ed :tabnew ~/.config/nvim/dev.vim<CR>
 nnoremap <leader><C-r> :source ~/.config/nvim/init.vim<CR>
 nnoremap <leader>s :%s//gc<Left><Left><Left>
 
@@ -179,3 +185,4 @@ let shortcuts = config_dir . "shortcuts.vim"
 if filereadable(shortcuts)
 	execute "source " . shortcuts
 endif
+

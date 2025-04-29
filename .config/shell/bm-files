@@ -9,7 +9,7 @@ zp	~/.zprofile
 xp	~/.xprofile
 gi	~/.gitignore
 zc	${XDG_CONFIG_HOME:-$HOME/.config}/zsh/.zshrc
-zh	${XDG_DATA_HOME:-$HOME/.config}/zsh/history
+zh	${XDG_STATE_HOME:-$HOME/.local/state}/zsh/history
 za	${XDG_CONFIG_HOME:-$HOME/.config}/shell/aliasrc
 arc	${XDG_CONFIG_HOME:-$HOME/.config}/shell/aliasrc
 spf	${XDG_CONFIG_HOME:-$HOME/.config}/shell/server.profile
@@ -22,8 +22,8 @@ xi	${XDG_CONFIG_HOME:-$HOME/.config}/X11/xinitrc
 mm	${XDG_CONFIG_HOME:-$HOME/.config}/mimeapps.list
 fdi	${XDG_CONFIG_HOME:-$HOME/.config}/fd/ignore
 ssc	~/.ssh/config
-csh	~/Dev/csstudent41.github.io/layouts/_default/home.html
 qn	${XDG_DOCUMENTS_HOME:-$HOME/Documents}/Notes/QuickNote.md
 bm	${XDG_DOCUMENTS_HOME:-$HOME/Documents}/Notes/bookmarks.txt
 akn	${XDG_DOCUMENTS_HOME:-$HOME/Documents}/Notes/ak47.txt
 li	${XDG_DOCUMENTS_HOME:-$HOME/Documents}/latex/lorem-ipsum.txt
+vrh	~/Dev/sites/vikas.rocks/layouts/_default/home.html

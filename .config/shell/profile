@@ -68,6 +68,8 @@ export FZF_DEFAULT_OPTS="
 	--bind 'alt-space:toggle-preview,alt-w:toggle-preview-wrap'
 	--bind 'alt-enter:print-query'
 	--bind 'ctrl-alt-c:change-preview-window(up|left:50%|down|right:50%)'
+	--bind 'ctrl-alt-k:change-preview-window(50%|60%|70%|80%|90%)'
+	--bind 'ctrl-alt-j:change-preview-window(50%|40%|30%|20%)'
 	--bind 'ctrl-alt-a:select-all,ctrl-alt-d:deselect-all'
 	--bind 'alt-n:half-page-down,alt-p:half-page-up'
 	--bind 'alt-N:page-down,alt-P:page-up'
@@ -84,12 +86,12 @@ export FZF_DEFAULT_OPTS="
 	--bind 'alt-9:change-preview(printf \"%s\\\n\" {+})'
 	--bind 'alt-!:execute(less {})'
 	--bind 'alt-@:execute(\$PREVIEWER {} | less)'
-	--bind 'alt-v:execute(echo {q} >> \"$FZF_HISTFILE\"; LESSOPEN=\"|preview %s\" less {})'
-	--bind 'alt-e:execute(echo {q} >> \"$FZF_HISTFILE\"; eval \"\${EDITOR:-vi} {}\")'
-	--bind 'ctrl-o:execute(echo {q} >> \"$FZF_HISTFILE\"; eval \"\${OPENER:-xdg-open} {}\")'
-	--bind 'alt-O:execute(echo {q} >> \"$FZF_HISTFILE\"; mimeopen --ask {})'
-	--bind 'alt-o:execute(echo {q} >> \"$FZF_HISTFILE\"; eval \"\${FILES:-lf} {}\")'
-	--bind 'alt-D:become(echo {q} >> \"$FZF_HISTFILE\"; dirname {} )'
+	--bind 'ctrl-o:execute(append-to-history {q} \"$FZF_HISTFILE\"; eval \"\${OPENER:-xdg-open} {}\")'
+	--bind 'alt-v:execute(append-to-history {q} \"$FZF_HISTFILE\"; LESSOPEN=\"|preview %s\" less {})'
+	--bind 'alt-e:execute(append-to-history {q} \"$FZF_HISTFILE\"; eval \"\${EDITOR:-vi} {}\")'
+	--bind 'alt-O:execute(append-to-history {q} \"$FZF_HISTFILE\"; mimeopen --ask {})'
+	--bind 'alt-o:execute(append-to-history {q} \"$FZF_HISTFILE\"; eval \"\${FILES:-lf} {}\")'
+	--bind 'alt-D:become(append-to-history {q} \"$FZF_HISTFILE\"; dirname {} )'
 	"
 
 ## Custom themes for GTypist

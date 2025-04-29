@@ -1,15 +1,15 @@
 #!/bin/sh
 
-help() { echo "clearx - execute command in clear screen
+help() { echo "screenx - execute command in a new fullscreen terminal
 
 USAGE:
-	clearx [OPTION]... <command>
+	screenx [OPTION]... <command>
 
 OPTIONS:
 	-n  no prompt when exiting
 	-h  show this help message"; }
 
-err() { printf 'clearx: %s\n' "$@" >&2; exit 1; }
+err() { printf 'screenx: %s\n' "$@" >&2; exit 1; }
 while getopts 'nh' o; do case "$o" in
 	n) nflag=0 ;;
 	h) help >&2; exit ;;
@@ -26,15 +26,15 @@ tmuxcmds="tmux set status off; $cmds; tmux set status on;"
 set_screen() {
 	[ -z "$TMUX" ] &&
 		err '$TMUX not set, only tmux is supported for screen program'
-	tmux new-window -n clearx "$tmuxcmds"
+	tmux new-window -n screenx "$tmuxcmds"
 }
-new_screen() { tmux new-session -s clearx "$tmuxcmds"; }
+new_screen() { tmux new-session -s screenx "$tmuxcmds"; }
 
 terminal_emulator() {
 	[ -z "$DISPLAY" ] && return 1
-		#err 'clearx: terminal_emulator: $DISPLAY not set'
+		#err 'screenx: terminal_emulator: $DISPLAY not set'
 	case "$TERMINAL" in
-		'') echo 'clearx: $TERMINAL not set' && exit 1 ;;
+		'') echo 'screenx: $TERMINAL not set' && exit 1 ;;
 		alacritty) export TERMINAL="alacritty" ;;
 	esac
 	wmctrl -r :ACTIVE: -b remove,fullscreen

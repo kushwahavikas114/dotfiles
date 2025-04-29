@@ -1,6 +1,7 @@
 {
-    "suggest.autoTrigger": "always",
-    "diagnostic.enable": true,
-		"python.linting.pycodestyleEnabled": true,
-		"html.autoCreateQuotes": false
+	"suggest.autoTrigger": "always",
+	"diagnostic.enable": true,
+	"python.linting.pycodestyleEnabled": true,
+	"html.autoCreateQuotes": false,
+	"coc.preferences.formatOnType": true
 }

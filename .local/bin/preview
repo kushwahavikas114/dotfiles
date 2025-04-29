@@ -47,7 +47,7 @@ case "$1" in
 			*html) w3m -dump "$1" ;;
 			text/markdown) glow "$1" ;;
 			application/json) highlight --syntax=json --replace-tabs=2 -- "$1" ;;
-			text/*) highlight --force -- "$1" ;;
+			text/*|*javascript) highlight --force -- "$1" ;;
 			audio/*|video/*|image/*) mediainfo -- "$1" ;;
 			*xz) xz --list "$1" ;;
 			*zip|*tar*|*7z*|*bzip2) atool --list -- "$1" ;;
