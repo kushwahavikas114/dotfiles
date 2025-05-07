@@ -1,3 +1,7 @@
 #!/bin/sh
 
-adb -s "${ADB_DEVICE}" shell "$@"
+if [ -n "$ADB_DEVICE" ]; then
+	adb -s "${ADB_DEVICE}" shell "$@"
+else
+	adb shell "$@"
+fi

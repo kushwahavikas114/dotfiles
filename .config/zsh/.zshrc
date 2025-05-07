@@ -263,7 +263,7 @@ case "$TERM" in *256*)
 	}
 
 	command -v fd >/dev/null && {
-		FZF_DEFAULT_COMMAND="fd --hidden --no-ignore-vcs --color=always | sort"
+		FZF_DEFAULT_COMMAND="fd --color=always | sort"
 		FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --ansi"
 		ff() { FZF_DEFAULT_COMMAND+="$@" fzf -m; }
 		alias f='fd --hidden --no-ignore-vcs'

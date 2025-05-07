@@ -3,5 +3,7 @@
 	"diagnostic.enable": true,
 	"python.linting.pycodestyleEnabled": true,
 	"html.autoCreateQuotes": false,
-	"coc.preferences.formatOnType": true
+	"coc.preferences.formatOnType": true,
+	"copilot.enable": false,
+	"copilot.showRemainingText": true
 }

@@ -1,0 +1,6 @@
+#!/bin/sh
+
+image="${XDG_PICTURES_DIR:-$HOME/Pictures}/xwindow.jpg"
+import -window "$(xdotool selectwindow)" "$image"
+# dragon-drop --and-exit "$image"
+xclip -sel clipboard -t image/png -i "$image"

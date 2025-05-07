@@ -546,6 +546,7 @@ bar {
 
 bar {
 	output nonprimary
+	status_command exec i3blocks -c ~/.config/i3blocks/systeminfo
 	bindsym --release button3 exec jgmenu --at-pointer
 	workspace_min_width 40
 	strip_workspace_numbers yes

@@ -4,6 +4,7 @@ packadd! onedark.vim
 " packadd! fzf
 packadd! fzf.vim
 packadd! vim-jsx-pretty
+packadd! copilot.vim
 
 " --> Fzf
 source ~/.config/nvim/other/fzf.vim
@@ -38,6 +39,7 @@ nnoremap <silent><nowait> <leader>ck  :<C-u>CocPrev<CR>
 nnoremap <silent><nowait> <leader>cp  :<C-u>CocListResume<CR>
 nnoremap <leader>cm :CocList marketplace<CR>
 nnoremap <leader>cff :Format<CR>
+inoremap <silent><expr><c-l> coc#refresh()
 
 " --> Vimspector
 let g:vimspector_base_dir = expand('$HOME/.local/share/nvim/vimspector')

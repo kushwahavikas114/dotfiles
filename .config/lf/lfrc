@@ -132,7 +132,7 @@ map M $lf -remote "send $id select \"$(FZF_DEFAULT_OPTS="--track --query '^${f##
 map D delete
 map W $setsid -f $TERMINAL >/dev/null 2>&1
 map X !$f
-map T push :$touch<space>""<c-b>
+map C push :$mk<space>""<c-b>
 map b $vidir
 map V push :!nvim<space>""<c-b>
 map P :link

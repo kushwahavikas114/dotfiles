@@ -7,7 +7,7 @@ for file in "$@"; do
 
 		*.pdf|*.djvu|*.epub) setsid -f zathura "$file" 2>/dev/null ;;
 		*.png|*.jpg|*.jpeg|*.webp) setsid -f nsxiv "$file" ;;
-		*.gif|*.mkv|*.mp3|*.mp4|*.webm|*.ogg) ${PLAYER:-mpv --sub-auto=fuzzy} "$file" ;;
+		*.gif|*.mkv|*.mp3|*.mp4|*.webm|*.ogg) ${PLAYER:-mpv --no-config --sub-auto=fuzzy} "$file" ;;
 		*.html) ${BROWSER:-w3m} "$file" ;;
 		*.pl.txt) fpl "$file" ;;
 		*.txt|*.description) ${PAGER:-less} "$file" ;;
@@ -31,7 +31,7 @@ for file in "$@"; do
 				application/sc) sc-im "$file" ;;
 				application/x-executable) "$file" ;;
 				image/*) setsid -f nsxiv "$file" ;;
-				video/*|audio/*) ${PLAYER:- mpv --sub-auto=fuzzy} "$file" ;;
+				video/*|audio/*) ${PLAYER:- mpv --no-config --sub-auto=fuzzy} "$file" ;;
 				*)
 					xdg-open "$file" || exit
 					[ -n "$DISPLAY" ] && notify-send "⚠️ open: unknown filetype" "$filetype"

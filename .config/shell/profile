@@ -1,5 +1,10 @@
 #!/bin/sh
 
+XDG_CONFIG_HOME="$HOME/.config"
+XDG_DATA_HOME="$HOME/.local/share"
+XDG_STATE_HOME="$HOME/.local/state"
+XDG_CACHE_HOME="$HOME/.cache"
+
 export OPENER="open"
 export PAGER="less"
 export EDITOR="nvim"
@@ -8,11 +13,6 @@ export FILES="lf"
 export TERMINAL="st"
 export PREVIEWER="preview"
 
-XDG_CONFIG_HOME="$HOME/.config"
-XDG_DATA_HOME="$HOME/.local/share"
-XDG_STATE_HOME="$HOME/.local/state"
-XDG_CACHE_HOME="$HOME/.cache"
-
 export MOUNTPATH="/run/media/$USER"
 export PASSWORD_STORE_DIR="$HOME/Phone/Backup/pass"
 export SSH_AUTH_SOCK="$HOME/.ssh/ssh_auth_sock"
@@ -20,6 +20,7 @@ export NCFTPDIR="$XDG_DATA_HOME/ncftp"
 export R_ENVIRON_USER="$XDG_DATA_HOME/R/.Renviron"
 export GOPATH="$XDG_DATA_HOME/go"
 export ANDROID_USER_HOME="$XDG_DATA_HOME/android"
+export ANDROID_HOME="$HOME/Android/Sdk"
 export __GL_SHADER_DISK_CACHE_PATH="$HOME/.cache/nv"
 export PYENV_ROOT="$XDG_DATA_HOME/pyenv"
 

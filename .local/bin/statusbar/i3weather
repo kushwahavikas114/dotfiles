@@ -1,5 +1,6 @@
 #!/bin/sh
-# i3block for displaying the current temperature, humidity and precipitation, if wttr.in i unavailable then WEATHER UNAVAILABLE will be displayed
+# weather module for i3blocks
+# output is set to 'WEATHER UNAVAILABLE' in case wttr.in is unreachable
 
 case "$BLOCK_BUTTON" in
 	'') ;;
