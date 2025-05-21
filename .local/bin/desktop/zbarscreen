@@ -1,0 +1,3 @@
+#!/bin/sh
+
+ import -silent -window root bmp:- | zbarimg - | sed -e 's/QR-Code://' | xclip -selection clipboard

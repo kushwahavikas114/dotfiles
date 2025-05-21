@@ -13,8 +13,8 @@ if [ "$display_count" = 2 ]; then
 
 	for display in $displays; do
 		case "$display" in
-			eDP*) export PRIMARY="$display"; set -- "$@" --output "$display" --mode 1920x1080 --primary --pos 0x270 ;;
-			HDMI*) set -- "$@" --output "$display" --mode 1920x1080 --pos 1920x0 --scale "1.25x1.25" ;;
+			eDP*) export PRIMARY="$display"; set -- "$@" --output "$display" --mode 1920x1080 --primary --pos 0x162 ;;
+			HDMI*) set -- "$@" --output "$display" --mode 1920x1080 --pos 2112x0 --scale "1.25x1.25" ;;
 		esac
 	done
 

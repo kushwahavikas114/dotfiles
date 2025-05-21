@@ -6,7 +6,7 @@ xrdb "${XDG_CONFIG_HOME:-$HOME/.config}/X11/Xresources" & xrdbpid=$!
 numlockx on &
 
 logdir="${XDG_STATE_HOME:-$HOME/.local/state}/startup"
-autostart="copyq dunst pipewire syncthing remapd gammastep setdp prime-offload"
+autostart="copyq dunst pipewire syncthing remapd gammastep setdp prime-offload mailsyncd"
 
 mkdir -pv "$logdir"
 for program in $autostart; do

@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# gi - edit the Git Ignore file of current repo
+
+TOPLEVEL="$(git rev-parse --show-toplevel)" || exit
+find "$TOPLEVEL" -name ".gitignore" | xargs -r nvim -p

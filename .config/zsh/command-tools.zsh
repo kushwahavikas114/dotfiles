@@ -1,5 +1,5 @@
 whereis_alias() {
-	location="$(zsh -xic exit 2>&1 | sed -E "/alias[ '$]*$1=/!d" |
+	location="$(zsh -xic exit 2>&1 | sed -E "/alias[ '$]*$1=/!d; /\/plugins\//d" |
 		fzf --exit-0 --select-1 --ansi --header-first --header='Select alias location' |
 		sed -n "s|^\+\(/.*:[0-9]*\)>.*$|\1|p")"
 

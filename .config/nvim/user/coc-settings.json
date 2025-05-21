@@ -4,6 +4,7 @@
 	"python.linting.pycodestyleEnabled": true,
 	"html.autoCreateQuotes": false,
 	"coc.preferences.formatOnType": true,
+	"copilot.showRemainingText": true,
 	"copilot.enable": false,
-	"copilot.showRemainingText": true
+	"typescript.autoClosingTags": false
 }

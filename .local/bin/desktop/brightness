@@ -15,6 +15,7 @@ case "$1" in
 esac
 
 brightness="$(brightnessctl --machine-readable | cut -d, -f4)"
+echo "$brightness" > "${XDG_STATE_HOME:-$HOME/.local/state}/brightness"
 
 if [ -n "$TMUX" ]; then
 	tmux display "Brightness: $brightness"

@@ -1,0 +1,3 @@
+#!/bin/sh
+
+import -silent -window "$(xdotool selectwindow)" png:- | xclip -sel clipboard -t image/png -i

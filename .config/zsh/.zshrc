@@ -248,6 +248,7 @@ bindkey '^[H' get-help
 
 [ -f "$SDOTDIR/aliasrc" ] && source "$SDOTDIR/aliasrc"
 [ -f "$SDOTDIR/shortcutrc" ] && source "$SDOTDIR/shortcutrc"
+[ -f "$SDOTDIR/shortcutenvrc" ] && source "$SDOTDIR/shortcutenvrc"
 [ -f "$ZDOTDIR/zshnameddirrc" ] && source "$ZDOTDIR/zshnameddirrc"
 
 
@@ -263,9 +264,9 @@ case "$TERM" in *256*)
 	}
 
 	command -v fd >/dev/null && {
-		FZF_DEFAULT_COMMAND="fd --color=always | sort"
+		FZF_DEFAULT_COMMAND="fd --hidden --color=always"
 		FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --ansi"
-		ff() { FZF_DEFAULT_COMMAND+="$@" fzf -m; }
+		ff() { fzf -m "$@"; }
 		alias f='fd --hidden --no-ignore-vcs'
 		alias sr='fd --no-ignore-vcs --color=always . ~/.config ~/.local/bin ~/bin | fzf --ansi'
 	}
@@ -286,7 +287,7 @@ alias sv='sudo sv'
 alias mmv='noglob zmv -W'
 alias s='sudo '
 alias fh='fzf --tac < "$OPEN_HISTFILE"'
-alias ide='nvim -u "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/dev.vim"'
+alias ide='nvim -u "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/coc.vim"'
 alias mirror='sudo reflector -f 30 -l 30 --number 10 --verbose --save /etc/pacman.d/mirrorlist-arch'
 alias mirrord='sudo reflector --latest 50 --number 20 --sort delay --save /etc/pacman.d/mirrorlist-arch'
 alias cleanup='sudo pacman -Rns $(pacman -Qtdq)'

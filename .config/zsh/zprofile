@@ -1,17 +1,20 @@
 #!/bin/zsh
+
 . ~/.profile
 
-[ -n "$TMUX" ] || [ -n "$TERMUX_VERSION" ] || [ "$SSH_CONNECTION" ] &&
+[ -n "$TMUX" ] || [ -n "$TERMUX_VERSION" ] || [ -n "$SSH_CONNECTION" ] &&
 	return
 
 on_ac_power="$(cat /sys/class/power_supply/ACAD/online)"
-[ "$on_ac_power" = 0 ] && brightnessctl set 5% || brightnessctl set 20%
+[ "$on_ac_power" = 0 ] &&
+	brightnessctl set 5% ||
+	brightnessctl set "$(<"${XDG_STATE_HOME:-$HOME/.local/state}/brightness")"
 
 case "$TTY" in
 	/dev/tty1)
 		 command -V optimus-manager >/dev/null && [ "$on_ac_power" = 1 ] && {
 			echo "Waiting for nvidia card to load up..."
-			until [ -e /dev/dri/card1 ]; do; sleep 0.1; done
+			until [ -e /dev/dri/card1 ]; do sleep 0.1; done
 		}
 		command -V startx >/dev/null && { pgrep startx || startx }
 		;;

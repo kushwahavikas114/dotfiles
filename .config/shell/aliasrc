@@ -21,7 +21,7 @@ alias gpu='gitpush'
 
 lt() { tree -aC --dirsfirst -I "$IGNORE_GLOB" "$@" | less -F; }
 dul() { du -ahd 1 "$@" | sort -h | less -FX; }
-v() { LESSOPEN="|preview %s" less -r -F "${1:-.}"; }
+v() { LESSOPEN="|preview %s" less -r -F -X "${@:-.}"; }
 ff() { find -H "$@" ! -wholename '*.git*' ! \( -type d -printf '%p/\n' , ! -type d -print \) | fzf -m; }
 senv() { source "${XDG_DATA_HOME:-$HOME/.local/share}/virtualenvs/${1:-main}/bin/activate"; }
 
