@@ -8,7 +8,7 @@ alias find="2> >(grep -v 'Permission denied' >&2) find"
 source ~/.profile
 [ -n "$SDOTDIR" ] || SDOTDIR="${XDG_CONFIG_HOME:-$HOME/.config}/shell"
 [ -n "$ZDOTDIR" ] || ZDOTDIR="${XDG_CONFIG_HOME:-HOME/.config}/zsh"
-source "/usr/share/fzf/completion.zsh"
+source "${PREFIX:-/usr}/share/fzf/completion.zsh"
 source "$ZDOTDIR/command-tools.zsh"
 source "$ZDOTDIR/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
 
@@ -329,5 +329,5 @@ pyenvs() {
 }
 
 # Load syntax highlighter; should be last.
-source "/home/master/.config/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh"
+source "${XDG_CONFIG_HOME:-$HOME/.config}/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh"
 
