@@ -117,8 +117,8 @@ map <c-k> ${{ lf -remote "send $id cd \"$(cat ${CD_HISTFILE:-${XDG_STATE_HOME:-$
 	fzf --reverse --tac --header-first --header='Path History')\"" }}
 map <c-c> select_eval "fzf --reverse --track --header-first --header='Jump to location' --query \"^${f##*/}/$\" --bind 'load:change-query(/$ )'"
 
-map c
 map d
+map c push :$mk<space>""<c-b>
 map I :rename; cmd-home
 map i :rename; cmd-word-back; cmd-left
 map a :rename; cmd-right
@@ -128,12 +128,12 @@ map o $LESSOPEN="|preview %s" less -r $f
 map O $mimeopen --ask $f
 map . set hidden!
 map x cut
-map M $lf -remote "send $id select \"$(FZF_DEFAULT_OPTS="--track --query '^${f##*/}$' --bind 'load:clear-query'" fmd)\""
+map M $lf -remote "send $id select \"$(FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --track --query '^${f##*/}$' --bind 'load:clear-query'" fmd)\""
 map D delete
 map W $setsid -f $TERMINAL >/dev/null 2>&1
 map X !$f
-map C push :$mk<space>""<c-b>
 map b $vidir
+map B $find . | vidir -
 map V push :!nvim<space>""<c-b>
 map P :link
 

@@ -10,8 +10,8 @@ alias l='ls -A'
 alias ll='ls -al'
 alias lr='ls -aR'
 # open
-alias o='${OPENER:-xdg-open}'
-alias e='${EDITOR:-vi}'
+alias o="${OPENER:-xdg-open}"
+alias e="${EDITOR:-vi}"
 alias se='sudoedit'
 alias lf='lfcd'
 alias sr='ff ~/.config ~/.local/bin ~/bin'
@@ -26,11 +26,11 @@ ff() { find -H "$@" ! -wholename '*.git*' ! \( -type d -printf '%p/\n' , ! -type
 senv() { source "${XDG_DATA_HOME:-$HOME/.local/share}/virtualenvs/${1:-main}/bin/activate"; }
 
 sudoedit() {
-	if command -V vim >/dev/null; then
+	if command -V nvim >/dev/null; then
+		sudo nvim -u "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/init.vim" "$@"
+	elif command -V vim >/dev/null; then
 		[ -f "$HOME/.vim/vimrc" ] && VIMRC="$HOME/.vim/vimrc"
 		sudo vim -u "${VIMRC:-$HOME/.vimrc}" "$@"
-	elif command -V nvim >/dev/null; then
-		sudo nvim -u "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/init.vim" "$@"
 	else
 		command sudoedit "$@"
 	fi
@@ -83,3 +83,4 @@ alias grep='grep --color=auto'
 alias tree='tree -C --dirsfirst'
 alias ls='ls -h --group-directories-first --color=auto --classify=auto'
 alias info='info --vi-keys --init-file ~/.config/infokey'
+alias rsync='rsync -h'

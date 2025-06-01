@@ -29,7 +29,7 @@ separator_block_width=35
 [weather]
 separator=true
 separator_block_width=50
-command=i3weather
+command=i3weather 1
 interval=1800
 color=#A4C2F4
 
@@ -58,12 +58,18 @@ command=echo " $(i3memory)"
 interval=1
 
 [datetime]
-separator=false
-separator_block_width=25
+separator=true
 # command=case "$BLOCK_BUTTON" in 1) TERM=256colors clearx -n 'cal -y --color=always | less' ;; 2) $TERMINAL -e nvim ~/.config/i3blocks/config ;; esac;  date +'🕒 %H:%M:%S  🗓️ %a %d.%m.%Y  '
-command=case "$BLOCK_BUTTON" in 1) $TERMINAL -e sh -c 'cal -y --color=always | less' ;; 2) $TERMINAL -e nvim ~/.config/i3blocks/config ;; esac;  date +' %H:%M:%S  󰃭 %a %d.%m.%Y  '
-color=#CCFFFF
+command=case "$BLOCK_BUTTON" in 1) $TERMINAL -e sh -c 'cal -y --color=always | less' ;; 2) $TERMINAL -e nvim ~/.config/i3blocks/config ;; esac;  date +' %H:%M:%S  󰃭 %a %d.%m.%Y  ✝  '
+color=#BBDDDD
 interval=1
+
+# [cross]
+# separator=true
+# separator_block_width=25
+# command=echo "☦"
+# color=#CCFFFF
+# interval=once
 
 # [ip]
 # command=hostname -i  # | awk '{ print "IP:" $1 }'

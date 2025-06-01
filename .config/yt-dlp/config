@@ -9,6 +9,5 @@
 --convert-subs srt
 --embed-subs
 
---write-description
 --embed-metadata
 --embed-chapters

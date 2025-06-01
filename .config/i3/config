@@ -101,6 +101,7 @@ bindsym Ctrl+Print exec --no-startup-id $preferredScreenCaptureTool
 
 bindsym $super+Return exec --no-startup-id $preferredTerminalEmulator
 bindsym $super+t exec --no-startup-id xfce4-terminal
+bindsym $super+Shift+t exec --no-startup-id notify-send Temprature "$(sensors --no-adapter coretemp-isa-0000 | tail +2 | sed "s|(.*)||")"
 
 font pango: source code pro 16
 
@@ -194,6 +195,7 @@ bindsym $super+Shift+Print --release exec --no-startup-id i3-scrot -s
 
 # kill focused window
 bindsym $super+q kill
+bindsym $super+Shift+q exec xkill -id "$(xdotool getactivewindow)"
 
 # split in horizontal orientation
 # bindsym $super+apostrophe split h
@@ -406,7 +408,6 @@ workspace $ws7  output "HDMI-0"
 workspace $ws8  output "HDMI-0"
 workspace $ws9  output "HDMI-0"
 workspace $ws10 output "HDMI-0"
-workspace "12: W " output "HDMI-0"
 
 
 ####################
@@ -546,7 +547,7 @@ bar {
 
 bar {
 	output nonprimary
-	status_command exec i3blocks -c ~/.config/i3blocks/systeminfo
+	status_command exec i3blocks -c ~/.config/i3blocks/bar2
 	bindsym --release button3 exec jgmenu --at-pointer
 	workspace_min_width 40
 	strip_workspace_numbers yes

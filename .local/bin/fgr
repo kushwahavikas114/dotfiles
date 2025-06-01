@@ -1,0 +1,82 @@
+#!/bin/sh
+
+# https://junegunn.github.io/fzf/tips/ripgrep-integration/#6-bind-enter-to-become-action
+
+help() { echo "fgr - grep with fzf (fzf-grep)
+
+USAGE:
+	fgr [OPTION]... PATTERN
+
+OPTIONS:
+	-r  real time grepping with fzf prompt
+	-h  show this help message
+
+ENVIRONMENT VARIABLES:
+	FZF_GREP_COMMAND   overrides the default grep command whose content is piped into fzf
+	FZF_GREP_OPENER    overrides the default opener used to open selection on pressing 'enter'
+	"; }
+
+err() { printf '%s: %s\n' "$0" "$@" >&2; exit 1; }
+
+while getopts 'rh' o; do case "$o" in
+	r) rflag=1 ;;
+	h) help >&2; exit ;;
+	?) err "invalid option passed" ;;
+esac done
+shift $((OPTIND - 1))
+
+[ -z "$FZF_HISTDIR" ] &&
+	export FZF_HISTDIR="${XDG_STATE_HOME:-$HOME/.local/state}/fzf"
+
+mkdir -pv "$FZF_HISTDIR"
+export FZF_HIST="$FZF_HISTDIR/grep_history"
+
+[ -z "$FZF_GREP_COMMAND" ] &&
+	if command -v rg >/dev/null; then
+		FZF_GREP_COMMAND="rg --smart-case --column --color=always"
+	elif command -v git >/dev/null; then
+		FZF_GREP_COMMAND="git grep -I --ignore-case --column --color=always"
+	else
+		FZF_GREP_COMMAND="grep -Rnsi --exclude-dir=.git --color=always"
+	fi
+
+[ -z "$FZF_GREP_RELOAD" ] &&
+	FZF_GREP_RELOAD="reload($FZF_GREP_COMMAND {q} || :)"
+
+[ -z "$FZF_GREP_OPENER" ] && FZF_GREP_OPENER='
+	if [[ $FZF_SELECT_COUNT -eq 0 ]]; then
+		$EDITOR {1} +{2}     # No selection. Open the current line in Vim.
+	else
+		$EDITOR +cw -q {+f}  # Build quickfix list for the selected items.
+	fi
+	'
+
+FZF_OPENER="
+	# update history
+	sed -i '\\|^{q}$|d' \"$FZF_HIST\"
+	echo {q} >> \"$FZF_HIST\"
+
+	$FZF_GREP_OPENER
+	"
+
+query="$*"
+
+fzf() { $FZF_GREP_COMMAND "$query" | command fzf "$@" \
+	--ansi --multi --exit-0 --header-first \
+	--history="$FZF_HIST" \
+	--bind "enter:execute($FZF_OPENER)" \
+	--bind "ctrl-o:become($FZF_OPENER)" \
+	--bind 'ctrl-v:toggle-preview,ctrl-space:toggle-preview' \
+	--bind "ctrl-r:reload($FZF_GREP_COMMAND '$query')" \
+	--bind 'alt-a:select-all,alt-d:deselect-all,ctrl-/:toggle-preview' \
+	--delimiter : \
+	--preview 'bat --style=full --color=always --highlight-line {2} {1}' \
+	--preview-window '~4,+{2}+4/3,<80(up)'; }
+
+if [ "$rflag" = 1 ]; then
+	fzf --disabled --query "$query" \
+		--header "COMMAND: $FZF_GREP_COMMAND <prompt-query>" \
+		--bind "change:$FZF_GREP_RELOAD"
+else
+	fzf --header "COMMAND: $FZF_GREP_COMMAND '$query'"
+fi

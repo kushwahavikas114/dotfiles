@@ -25,6 +25,14 @@
 separator=false
 separator_block_width=60
 
+# Guess the weather hourly
+[weather]
+separator=true
+separator_block_width=50
+command=i3weather 2
+interval=1800
+color=#A4C2F4
+
 # [badwidth]
 # seprator=false
 # command=echo "$(i3bandwidth)"

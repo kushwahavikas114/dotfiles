@@ -1,7 +1,7 @@
 # You can add comments to these files with #
 cac	${XDG_CACHE_HOME:-$HOME/.cache}
 cg	${XDG_CONFIG_HOME:-$HOME/.config}
-lbn	${XDG_SCRIPTS_DIR:-$HOME/.local/bin}
+lb	${XDG_SCRIPTS_DIR:-$HOME/.local/bin}
 lsh	${XDG_DATA_DIR:-$HOME/.local/share}
 lst	${XDG_STATE_DIR:-$HOME/.local/state}
 lsr	${XDG_SOURCE_DIR:-$HOME/.local/src}
@@ -12,7 +12,7 @@ px	${XDG_PICTURES_DIR:-$HOME/Pictures}
 vd	${XDG_VIDEOS_DIR:-$HOME/Videos}
 
 nv	${XDG_CONFIG_HOME:-$HOME/.config}/nvim
-lsha	${XDG_DATA_DIR:-$HOME/.local/share}/applications
+lsa	${XDG_DATA_DIR:-$HOME/.local/share}/applications
 vnv	${XDG_DATA_DIR:-$HOME/.local/share}/virtualenvs
 ltr	${XDG_DATA_DIR:-$HOME/.local/share}/Trash
 dl	${XDG_DOCUMENTS_DIR:-$HOME/Documents}/latex
@@ -36,16 +36,16 @@ sv	~/Phone/.stversions
 pw	~/Phone/Android/media/com.whatsapp.w4b/WhatsApp\ Business/Media/WhatsApp\ Business\ Documents
 
 mn	/mnt
-stg	${STORAGE:-/mnt/storage}
-lbr	${STORAGE:-/mnt/storage}/Library
-med	${STORAGE:-/mnt/storage}/Media
-sts	${STORAGE:-/mnt/storage}/sites
+sg	${STORAGE:-/mnt/storage}
+lr	${STORAGE:-/mnt/storage}/Library
+md	${STORAGE:-/mnt/storage}/Media
+st	${STORAGE:-/mnt/storage}/sites
 sd	/sdcard
 mp	/run/media/$USER/
 mtp	/run/user/1000/gvfs
 usr	${PREFIX:-/usr}
 ush	/usr/share
 usd	/usr/share/doc
-usha	/usr/share/applications
+usa	/usr/share/applications
 tmp	/tmp
-tmu	/tmp/mozilla_${USER}0
+mzt	/tmp/mozilla_${USER}0

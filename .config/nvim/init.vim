@@ -32,7 +32,7 @@ if filereadable(config_dir . "autoload/plug.vim")
 	call plug#end()
 endif
 
-packadd fzf.vim
+packadd! fzf.vim
 source ~/.config/nvim/user/fzf.vim
 set rtp+=/usr/share/vim/vimfiles
 
@@ -58,7 +58,6 @@ highlight ColorColumn ctermbg=238
 highlight! link CursorColumn ColorColumn
 highlight FloatermBorder guibg=orange guifg=cyan
 autocmd FileType text,fstab setlocal tabstop=8 shiftwidth=8
-autocmd FileType html setlocal tabstop=2 shiftwidth=2 list nolinebreak
 autocmd FileType sql  setlocal commentstring=--\ %s
 autocmd BufWritePre * %s/\s\+$//e
 autocmd BufEnter bm-files,bm-dirs setlocal tabstop=8 shiftwidth=8
@@ -123,7 +122,10 @@ endfunction
 autocmd BufNewFile * call SourceTemplate()
 
 autocmd TermOpen * startinsert
-command! -nargs=* T  split  | terminal <args>
+command! -nargs=* TermSplit  split  | terminal <args>
+command! -nargs=* TermVSplit  vsplit  | terminal <args>
+
+command! -nargs=* T  tabnew <args>
 
 " --> Bindings and configs
 
@@ -147,7 +149,7 @@ vnoremap <C-A-c> "*d :let @+=@*<CR>
 noremap <C-p> "+p
 noremap <C-A-p> "+P
 
-nnoremap c "_c
+nnoremap c "cc
 inoremap jk <Esc>
 " map ;n /<++><Enter>c4l
 inoremap ;n <Esc>/<++><Enter>c4l
@@ -155,8 +157,9 @@ nnoremap <leader>n /<++><Enter>c4l
 
 augroup Web
 	autocmd!
-	autocmd FileType html,javascript call SetWebBindings()
-	function SetWebBindings()
+	autocmd FileType html,javascript call SetWebOptions()
+	function SetWebOptions()
+		setlocal tabstop=2 shiftwidth=2 list nolinebreak
 		inoremap ;s ><Esc>bi<<Esc>ea
 		inoremap ;c ><Esc>bi</<Esc>ea
 		inoremap ;i <Esc>b"tywi<<Esc>ea></><Esc>PF<i
@@ -173,8 +176,8 @@ augroup END
 
 augroup Tex
 	autocmd!
-	autocmd FileType tex call SetTexBindings()
-	function SetTexBindings()
+	autocmd FileType tex call SetTexOptions()
+	function SetTexOptions()
 		inoremap ;b <Esc>b"tywi\begin{<Esc>ea}<CR>\end{<Esc>"tpa}<Esc>kA
 		inoremap ;s \section{}<Esc>i
 		inoremap ;at \begin{tikzpicture}<CR>\end{tikzpicture}<Esc>O
@@ -197,25 +200,25 @@ nnoremap <leader>ft :w<CR>:!dev test "%"<CR>
 nnoremap <leader>fb :w<CR>:!dev build "%"<CR>
 nnoremap <leader>fr :w<CR>:!dev clean "%"<CR>
 
-nnoremap <leader>Fl :w<CR>:T dev lint "%"<CR>
-nnoremap <leader>Fm :w<CR>:T dev format "%"<CR>
-nnoremap <leader>Fc :w<CR>:T dev compile "%"<CR>
-nnoremap <leader>Fe :w<CR>:T dev run "%"<CR>
-nnoremap <leader>Ft :w<CR>:T dev test "%"<CR>
-nnoremap <leader>Fr :w<CR>:T dev clean "%"<CR>
+nnoremap <leader>Fl :w<CR>:TermSplit dev lint "%"<CR>
+nnoremap <leader>Fm :w<CR>:TermSplit dev format "%"<CR>
+nnoremap <leader>Fc :w<CR>:TermSplit dev compile "%"<CR>
+nnoremap <leader>Fe :w<CR>:TermSplit dev run "%"<CR>
+nnoremap <leader>Ft :w<CR>:TermSplit dev test "%"<CR>
+nnoremap <leader>Fr :w<CR>:TermSplit dev clean "%"<CR>
 
 nnoremap <leader>b :w<CR>:se nornu<CR>:!dev build "%"<CR>:se rnu<CR>
-nnoremap <leader>B :w<CR>:se nornu<CR>:T dev build "%"<CR>
+nnoremap <leader>B :w<CR>:se nornu<CR>:TermSplit dev build "%"<CR>
 nnoremap <leader>t :w<CR>:se nornu<CR>:!dev test "%"<CR>:se rnu<CR>
-nnoremap <leader>T :w<CR>:se nornu<CR>:T dev test "%"<CR>
+nnoremap <leader>T :w<CR>:se nornu<CR>:TermSplit dev test "%"<CR>
 
 nnoremap <leader>w :set wrap!<CR>
 nnoremap <leader>fo :!opout "%:p"<CR>
 nnoremap <leader><C-r> :source ~/.config/nvim/init.vim<CR>
 nnoremap <leader>s :%s//gc<Left><Left><Left>
 
-nnoremap <leader>gc :T git add --all && git commit<CR>
-nnoremap <leader>gp :T gitpush<CR>
+nnoremap <leader>gc :TermSplit git add --all && git commit<CR>
+nnoremap <leader>gp :TermSplit gitpush<CR>
 
 let shortcuts = config_dir . "shortcuts.vim"
 if filereadable(shortcuts)

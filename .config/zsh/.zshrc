@@ -52,7 +52,7 @@ preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
 # Completion.
 autoload -Uz compinit
 compinit -d ~/.cache/zshcompdump-$ZSH_VERSION
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'       # Case insensitive tab completion
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'       # Case insensitive tab completion
 zstyle ':completion:*' rehash true                              # automatically find new executables in path
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"         # Colored completion (different colors for dirs/files/etc)
 zstyle ':completion:*' completer _expand _complete _ignored _approximate

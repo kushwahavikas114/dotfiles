@@ -1,5 +1,5 @@
-Xcursor.size: 40
-Xcursor.theme: Banana
+Xcursor.theme: elementary
+Xcursor.size: 32
 
 !! Transparency (0-1):
 st.alpha: 0.95

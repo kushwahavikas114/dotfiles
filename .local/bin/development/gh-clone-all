@@ -12,5 +12,5 @@ while [ "$page" -lt "$max" ]; do
 	page=$(( page + 1 ))
 	curl "https://api.github.com/$cntx/$name/repos?page=$page&per_page=100" |
 		sed -E '/^\s*"clone_url": "(.*)",$/!d; s//\1/' |
-		xargs -L1 echo git clone
+		xargs -L1 git clone
 done
