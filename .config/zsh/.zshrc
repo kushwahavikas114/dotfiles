@@ -6,8 +6,12 @@ bindkey -e
 alias find="2> >(grep -v 'Permission denied' >&2) find"
 
 source ~/.profile
+
 [ -n "$SDOTDIR" ] || SDOTDIR="${XDG_CONFIG_HOME:-$HOME/.config}/shell"
 [ -n "$ZDOTDIR" ] || ZDOTDIR="${XDG_CONFIG_HOME:-HOME/.config}/zsh"
+[ -n "$CD_HISTFILE" ] || CD_HISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/cd_history"
+[ -n "$OPEN_HISTFILE" ] || OPEN_HISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/open_history"
+
 source "${PREFIX:-/usr}/share/fzf/completion.zsh"
 source "$ZDOTDIR/command-tools.zsh"
 source "$ZDOTDIR/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh"
@@ -67,7 +71,9 @@ zstyle ':completion:*' cache-path ~/.cache/zsh
 
 # automatically load bash completion functions
 autoload -U +X bashcompinit && bashcompinit
-source "$ZDOTDIR/completion/arduino-cli.zsh"
+
+unset WORDCHARS
+stty -ixon
 
 ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 ZSH_AUTOSUGGEST_ACCEPT_WIDGETS=(end-of-line vi-end-of-line vi-add-eol)
@@ -77,14 +83,7 @@ HISTFILE="${XDG_STATE_HOME:=$HOME/.local/state}/zsh/history"
 HISTSIZE=100000
 SAVEHIST=50000
 
-unset WORDCHARS
-stty -ixon
-
-[ -z "$CD_HISTFILE" ] &&
-	export CD_HISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/cd_history"
-
-[ -z "$OPEN_HISTFILE" ] &&
-	export OPEN_HISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/open_history"
+# source "$ZDOTDIR/completion/arduino-cli.zsh"
 
 # Angular
 # _ng_yargs_completions()
@@ -99,12 +98,20 @@ stty -ixon
 # compdef _ng_yargs_completions ng
 
 
+[ -n "$DISPLAY" ] && command -V xdotool >/dev/null && {
+	TERMINAL_WINDOW_ID="$(xdotool getactivewindow)"
+	function set_win_title() {
+			echo -ne "\033]0; $USER@$HOST:${PWD/$HOME/~} \007"
+	}
+	precmd_functions+=(set_win_title)
+}
+
 _command_fail_hook() {
 	[ $? = 1 ] || return
 	if [ -n "$TMUX" ]; then
 		tmux send-keys C-p
-	elif [ -n "$XDOTOOL_WINDOW_ID" ]; then
-		xdotool key --window "$XDOTOOL_WINDOW_ID" ctrl+p
+	elif [ -n "$TERMINAL_WINDOW_ID" ]; then
+		xdotool key --window "$TERMINAL_WINDOW_ID" ctrl+p
 	fi
 }
 add-zsh-hook precmd _command_fail_hook
@@ -150,21 +157,18 @@ if (( ${+terminfo[smkx]} && ${+terminfo[rmkx]} )); then
 fi
 
 
-[ -n "$DISPLAY" ] && command -V xdotool >/dev/null &&
-	XDOTOOL_WINDOW_ID="$(xdotool getactivewindow)"
-
 [ -f "$BUFFER_CACHE" ] && {
 	{
 		if [ -n "$TMUX" ]; then
 			tmux send-keys -l "$(cat "$BUFFER_CACHE")"
 		elif [ -z "$TERMUX_VERSION" ]; then
-			xdotool type --window "$XDOTOOL_WINDOW_ID" "$(cat "$BUFFER_CACHE")"
+			xdotool type --window "$TERMINAL_WINDOW_ID" "$(cat "$BUFFER_CACHE")"
 		fi
 		rm -f "$BUFFER_CACHE"
 	} & disown
 }
 
-BUFFER_CACHE="${ZCACHEDIR:=$HOME/.cache/zsh}/previous-command-buffer-$$.tmp"
+export BUFFER_CACHE="${ZCACHEDIR:=$HOME/.cache/zsh}/previous-command-buffer-$$.tmp"
 _exec-zsh() {
 	echo "$BUFFER" > "$BUFFER_CACHE"
 	BUFFER=' exec zsh'
@@ -266,27 +270,22 @@ case "$TERM" in *256*)
 	command -v fd >/dev/null && {
 		FZF_DEFAULT_COMMAND="fd --hidden --color=always"
 		FZF_DEFAULT_OPTS="$FZF_DEFAULT_OPTS --ansi"
-		ff() { fzf -m "$@"; }
 		alias f='fd --hidden --no-ignore-vcs'
 		alias sr='fd --no-ignore-vcs --color=always . ~/.config ~/.local/bin ~/bin | fzf --ansi'
 	}
 
 	command -v starship >/dev/null && {
 		eval "$(starship init zsh)"
-		function set_win_title() {
-				echo -ne "\033]0; $USER@$HOST:${PWD/$HOME/~} \007"
-		}
-		precmd_functions+=(set_win_title)
 	}
 
 ;; esac
 
+alias s='sudo '
 alias p='pacman'
 alias sp='sudo pacman'
 alias sv='sudo sv'
+alias pm='PASSWORD_STORE_DIR=$CUSTOM_PASSWORD_STORE pass'
 alias mmv='noglob zmv -W'
-alias s='sudo '
-alias fh='fzf --tac < "$OPEN_HISTFILE"'
 alias ide='nvim -u "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/coc.vim"'
 alias mirror='sudo reflector -f 30 -l 30 --number 10 --verbose --save /etc/pacman.d/mirrorlist-arch'
 alias mirrord='sudo reflector --latest 50 --number 20 --sort delay --save /etc/pacman.d/mirrorlist-arch'
@@ -295,14 +294,18 @@ alias fixpacman='sudo rm /var/lib/pacman/db.lck'
 alias gtypist="gtypist $GTYPIST_OPTS"
 alias typ='launch-gtypist -l "$(sed "/^gtypist lesson - \(.*\)$/!d; s//\1/" ~/Documents/Notes/QuickNote.md)"'
 alias typa='launch-gtypist -e 3 -l "$(sed "/^gtypist lesson - \(.*\)$/!d; s//\1/" ~/Documents/Notes/ak47.txt)"'
+alias uc='cd ~ && gitpush'  # update config
+alias gpu='gitpush'
+alias wtr='less -r /tmp/wttr.in'
 
 # Launch new (W)indow in background
-W() {
+new_window() {
 	windowid="$(xdotool getactivewindow)"
-	setsid -f $TERMINAL >/dev/null 2>&1
+	setsid -f $TERMINAL -e sh -c "${*:-$SHELL}" >/dev/null 2>&1
 	while [ "$(xdotool getactivewindow)" = "$windowid" ]; do sleep 0.1; done
 	xdotool windowfocus "$windowid"
 }
+alias W='new_window '
 
 # Find command package
 F() {

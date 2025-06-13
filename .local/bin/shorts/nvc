@@ -1,0 +1,4 @@
+#!/bin/sh
+
+# assumes NvChad is configured in ~/Dev/.config/nvim
+envrun -d "$HOME/Dev" nvim "$@"

@@ -1,0 +1,55 @@
+#!/bin/sh
+
+help() { echo "envrun - run programs in an isolated home directory
+
+USAGE:
+	envrun [OPTION]... COMMAND
+
+OPTIONS:
+	-d ENVHOME   use the ENVHOME environment directory
+	-h           show this help message"; }
+
+while getopts 'd:h' o; do case "$o" in
+	d) export ENVHOME="$OPTARG" ;;
+	*) help >&2; exit ;;
+esac done
+shift $((OPTIND - 1))
+
+export HOME="${ENVHOME:-"$PWD"}"
+export XDG_CACHE_HOME="$HOME/.cache"
+export XDG_CONFIG_HOME="$HOME/.config"
+export XDG_DATA_HOME="$HOME/.local/share"
+export XDG_STATE_HOME="$HOME/.local/state"
+
+ensure_dirs() {
+	for dir in "$@"; do
+		[ -d "$dir" ] || { missing=1; break; }
+	done
+
+	[ "$missing" = 1 ] || return
+	printf "\nFollowing directories will be created.\n\n"
+	for dir in "$@"; do
+		[ -d "$dir" ] || echo "$dir/"
+	done
+
+	printf "\ncontinue? [y/N] "
+	read -r ans
+	case "$ans" in
+		y|Y) echo; mkdir -pv "$@"; echo ;;
+		*) exit ;;
+	esac
+}
+
+ensure_dirs \
+	"$XDG_CACHE_HOME" \
+	"$XDG_CONFIG_HOME" \
+	"$XDG_DATA_HOME" \
+	"$XDG_STATE_HOME"
+
+[ "$#" -lt 1 ] && {
+	echo "Please provide a command to run."
+	exit
+}
+
+"$@"
+

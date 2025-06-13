@@ -3,3 +3,5 @@
 	name = Vikas Kushwaha
 [init]
 	defaultBranch = master
+[http]
+	postbuffer = 10g

@@ -1,6 +1,6 @@
 #!/bin/sh
-# weather module for i3blocks
-# output is set to 'WEATHER UNAVAILABLE' in case wttr.in is unreachable
+# i3blocks weather module using wttr.in
+# output is set to -- in case wttr.in is unreachable
 
 WTTR_CACHE_DIR="/tmp"
 WTTR_CACHE="$WTTR_CACHE_DIR/wttr.in"
@@ -8,30 +8,46 @@ WTTR_TXT="$WTTR_CACHE_DIR/wttr.txt"
 WTTR_LOCATION="Vasai"
 WTTR_URL="https://wttr.in/$WTTR_LOCATION"
 
+notify() {
+	[ "$isUpdating" = 1 ] &&
+		notify-send --replace-id=217534 "$@"
+}
+
+err() {
+	printf "i3weather: %s\n" "$@" >&2
+	notify "🛑 ERROR (i3weather)" "$*"
+	echo "⛅ -- "
+	exit 1
+}
+
 case "$BLOCK_BUTTON" in
 	'') true ;;
 	1)
 		[ -f "$WTTR_CACHE" ] || BLOCK_BUTTON=5 i3weather
-		sed 's,\x1B\[[0-9;]*[a-zA-z],,g' "$WTTR_CACHE" > "$WTTR_TXT"
 		st -c "dropdown_weather" \
-			-g "$(wc -L < "$WTTR_TXT")x38" \
-			-e less -r "$WTTR_CACHE" & sleep 0.3
-		;;
+			-g "$(wc -L < "$WTTR_TXT")x30" \
+			-e less -r "$WTTR_CACHE" & sleep 0.3 ;;
 	2) $TERMINAL -e nvim "$0" ;;
-	*) notify-send "⛅ Refreshing weather info..." ;;
+	*) isUpdating=1; notify "⛅ Refreshing weather info..." ;;
 esac
 
+# update cache files
+res="$(curl -Ss "$WTTR_URL" > "$WTTR_CACHE" 2>&1)" || err "$res"
+sed 's,\x1B\[[0-9;]*[a-zA-z],,g' "$WTTR_CACHE" > "$WTTR_TXT"
+[ "$(wc -l "$WTTR_TXT" | cut -d' ' -f1)" -lt 20 ] && err "$(cat "$WTTR_TXT")"
+
+# get weather based on argument
 case "$1" in
-	1) weather="$(curl -s "$WTTR_URL?format=%c")$WTTR_LOCATION   $(curl -Ss "$WTTR_URL?0&T&Q" | sed -E '2,3!d; s/.{16}(.{13}).*/\1/; s/ {4}$//' | tr -d '\n')" ;;
-	2) weather="$(curl -s "$WTTR_URL?format=%c%C")" ;;
-	*) weather="$(curl -s "$WTTR_URL?format=%c") $(curl -Ss "$WTTR_URL?0&T&Q" | cut -c 16- | head -2)" ;;
+	info) weather="$(curl -Ss "$WTTR_URL?format=%c%C" 2>&1)" ;;
+	cache) weather="$(sed -E '1,7!d; 3d; 6d; s/.{16}(.{,13}).*/\1/; s/\s//g' "$WTTR_TXT" |
+			sed -z 's/\n/:/; s/\n/  /g; s/\s*$//' 2>&1)" ;;
+	*) weather="$(curl -Ss "$WTTR_URL?format=%l:+%c+%t(%f)++%w++%p" 2>&1)" ;;
 esac
 
-if [ "$(echo "$weather" | grep -Ec "(Unknown|curl|HTML)")" -gt 0 ]; then
-    echo "WEATHER UNAVAILABLE"
-else
-    echo "${weather:-⛅ -- }"
-fi
+# check for empty responses and errors
+[ "$(echo "$weather" | grep -Ec "(Unknown|curl|HTML)")" -gt 0 ] &&
+  err "$weather" || echo "${weather:-⛅ -- }"
 
-curl -s "$WTTR_URL" > "$WTTR_CACHE"
+# End response when no error occurs
+notify "✔️ Weather Updated."
 

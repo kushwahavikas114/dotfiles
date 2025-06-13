@@ -1,0 +1,19 @@
+#!/bin/sh
+
+[ -n "$YT_HISTFILE" ] ||
+	export YT_HISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/yt_history.tsv"
+
+menu() {
+	case "$1" in
+		dmenu) tac "$YT_HISTFILE" | dmenu -l 30 ;;
+		*)
+			bat --color=always --language=tsv --style=plain "$YT_HISTFILE" |
+				fzf --ansi --tac \
+				--delimiter '\t' --with-nth 2,3 \
+				--header-first --header "YT History" \
+				--preview="echo {1}" --preview-window="up,1" \
+				--bind 'ctrl-y:execute-silent(printf "%s\n" {1} | xsel --clipboard)' ;;
+	esac
+}
+
+ menu "$@" | sed -E "s/\t.*\t.*$//"

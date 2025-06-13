@@ -29,7 +29,7 @@ separator_block_width=35
 [weather]
 separator=true
 separator_block_width=50
-command=i3weather 1
+command=i3weather cache
 interval=1800
 color=#A4C2F4
 
@@ -59,8 +59,7 @@ interval=1
 
 [datetime]
 separator=true
-# command=case "$BLOCK_BUTTON" in 1) TERM=256colors clearx -n 'cal -y --color=always | less' ;; 2) $TERMINAL -e nvim ~/.config/i3blocks/config ;; esac;  date +'🕒 %H:%M:%S  🗓️ %a %d.%m.%Y  '
-command=case "$BLOCK_BUTTON" in 1) $TERMINAL -e sh -c 'cal -y --color=always | less' ;; 2) $TERMINAL -e nvim ~/.config/i3blocks/config ;; esac;  date +' %H:%M:%S  󰃭 %a %d.%m.%Y  ✝  '
+command=sb-clock
 color=#BBDDDD
 interval=1
 

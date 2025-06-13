@@ -17,13 +17,11 @@ eval "echo \"$(cat "$bmdirs")\"" |
 awk -F'\t' "
 	!/^\s*#/ && !/^\s*$/ {
 		gsub(\"\\\s*#.*$\", \"\");
-		printf(\"C%s='cd %s && ls -A' \\\\\n\",\$1,\$2) >> \"$shell_shortcuts\"
-		printf(\"D%s='cd %s && ls -A' \\\\\n\",\$1,\$2) >> \"$shell_shortcuts\"
-		printf(\"D%s=\42%s\42 \\\\\n\", \$1, \$2) >> \"$shell_env_shortcuts\"
-		printf(\"hash -d D%s=%s\n\", \$1, \$2) >> \"$zsh_named_dirs\"
+		printf(\"%s='cd %s && ls -A' \\\\\n\",\$1,\$2) >> \"$shell_shortcuts\"
+		printf(\"%s=\42%s\42 \\\\\n\", \$1, \$2) >> \"$shell_env_shortcuts\"
+		printf(\"hash -d %s=%s\n\", \$1, \$2) >> \"$zsh_named_dirs\"
 		printf(\"map C%s :cd %s\n\", \$1, \$2) >> \"$lf_shortcuts\"
-		printf(\"cmap ;D%s %s\n\", \$1, \$2) >> \"$vim_shortcuts\"
-		printf(\"imap ;D%s %s\n\", \$1, \$2) >> \"$vim_shortcuts\"
+		printf(\"cmap ;%s %s\n\", \$1, \$2) >> \"$vim_shortcuts\"
 	}
 	"
 
@@ -31,12 +29,10 @@ eval "echo \"$(cat "$bmfiles")\"" |
 awk -F'\t' "
 	!/^\s*#/ && !/^\s*$/ {
 		gsub(\"\\\s*#.*$\", \"\");
-		printf(\"E%s='\$EDITOR %s' \\\\\n\",\$1,\$2) >> \"$shell_shortcuts\"
-		printf(\"F%s='\$EDITOR %s' \\\\\n\",\$1,\$2) >> \"$shell_shortcuts\"
-		printf(\"F%s=\42%s\42 \\\\\n\", \$1, \$2) >> \"$shell_env_shortcuts\"
-		printf(\"hash -d F%s=%s\n\", \$1, \$2) >> \"$zsh_named_dirs\"
+		printf(\"%s='\$EDITOR %s' \\\\\n\",\$1,\$2) >> \"$shell_shortcuts\"
+		printf(\"%s=\42%s\42 \\\\\n\", \$1, \$2) >> \"$shell_env_shortcuts\"
+		printf(\"hash -d %s=%s\n\", \$1, \$2) >> \"$zsh_named_dirs\"
 		printf(\"map E%s $\$EDITOR %s\n\", \$1, \$2) >> \"$lf_shortcuts\"
-		printf(\"cmap ;F%s %s\n\", \$1, \$2) >> \"$vim_shortcuts\"
-		printf(\"imap ;F%s %s\n\", \$1, \$2) >> \"$vim_shortcuts\"
+		printf(\"cmap ;%s %s\n\", \$1, \$2) >> \"$vim_shortcuts\"
 	}
 	"

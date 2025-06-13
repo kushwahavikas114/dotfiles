@@ -1,0 +1,61 @@
+#!/bin/sh
+
+clock=$(date '+%I')
+
+# # emoji icons
+# case "$clock" in
+# 	"00") icon="🕛" ;;
+# 	"01") icon="🕐" ;;
+# 	"02") icon="🕑" ;;
+# 	"03") icon="🕒" ;;
+# 	"04") icon="🕓" ;;
+# 	"05") icon="🕔" ;;
+# 	"06") icon="🕕" ;;
+# 	"07") icon="🕖" ;;
+# 	"08") icon="🕗" ;;
+# 	"09") icon="🕘" ;;
+# 	"10") icon="🕙" ;;
+# 	"11") icon="🕚" ;;
+# 	"12") icon="🕛" ;;
+# esac
+
+# nerd fonts clock
+case "$clock" in
+	"00") icon="󱑖" ;;
+	"01") icon="󱑋" ;;
+	"02") icon="󱑌" ;;
+	"03") icon="󱑍" ;;
+	"04") icon="󱑎" ;;
+	"05") icon="󱑏" ;;
+	"06") icon="󱑐" ;;
+	"07") icon="󱑑" ;;
+	"08") icon="󱑒" ;;
+	"09") icon="󱑓" ;;
+	"10") icon="󱑔" ;;
+	"11") icon="󱑕" ;;
+	"12") icon="󱑖" ;;
+esac
+
+# # nerd fonts clock filled
+# case "$clock" in
+# 	"00") icon="󱑊" ;;
+# 	"01") icon="󱐿" ;;
+# 	"02") icon="󱑀" ;;
+# 	"03") icon="󱑁" ;;
+# 	"04") icon="󱑂" ;;
+# 	"05") icon="󱑃" ;;
+# 	"06") icon="󱑄" ;;
+# 	"07") icon="󱑅" ;;
+# 	"08") icon="󱑆" ;;
+# 	"09") icon="󱑇" ;;
+# 	"10") icon="󱑈" ;;
+# 	"11") icon="󱑉" ;;
+# 	"12") icon="󱑊" ;;
+# esac
+
+case $BLOCK_BUTTON in
+	1) st -c "dropdown_calendar" -g 66x34 -e sh -c "cal -y --color=always|less" ;;
+	2) setsid -f "$TERMINAL" -e "$EDITOR" "$0" ;;
+esac
+
+date +"$icon %H:%M:%S  󰃭 %a %d.%m.%Y  ✟  "

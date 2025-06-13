@@ -1,0 +1,27 @@
+#!/bin/sh
+
+[ -z "$CD_HISTFILE" ] &&
+	export CD_HISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/cd_history"
+
+[ -z "$OPEN_HISTFILE" ] &&
+	export OPEN_HISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/open_history"
+
+on_ac_power() { [ "$(cat /sys/class/power_supply/ACAD/online)" = 1 ]; }
+
+sleep 10
+on_ac_power || echo "System not plugged to AC Adapter, waiting..."
+
+until on_ac_power; do
+	sleep 10m
+done
+
+echo "[cleanup]	Cleaning $CD_HISTFILE"
+cleanup-history-file "$CD_HISTFILE"
+
+echo "[cleanup]	Cleaning $OPEN_HISTFILE"
+cleanup-history-file "$OPEN_HISTFILE"
+
+echo "[cleanup]	Cleaning orphaned packages..."
+pacman -Qtdq | xargs -r sudo pacman -Rns --noconfirm
+
+echo "[cleanup]	Finished Cleaning."

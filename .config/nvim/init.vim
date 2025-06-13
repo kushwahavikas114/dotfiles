@@ -33,13 +33,12 @@ if filereadable(config_dir . "autoload/plug.vim")
 endif
 
 packadd! fzf.vim
-source ~/.config/nvim/user/fzf.vim
+source ~/.config/nvim/plugins.conf.d/fzf.vim
 set rtp+=/usr/share/vim/vimfiles
 
 let g:Verdin#autocomplete = 1
 let g:livepreview_previewer = 'zathura'
 let g:tex_flavor = 'latex'
-let g:session_filename = '.session.vim'
 
 set title showmatch nowrap mouse=a scrolloff=5
 set tabstop=2 shiftwidth=0
@@ -88,46 +87,74 @@ nnoremap <Esc>o     :LfWorkingDirectory<CR>
 nnoremap <leader>l  :LfCurrentFileNewTab<CR>
 nnoremap <leader>o  :LfWorkingDirectoryExistingOrNewTab<CR>
 
+
 " --> Sessions
 
-fu! SaveSess()
-    execute 'mksession! ' . getcwd() . '/' . g:session_filename
+let g:session_filename = '.session.vim'
+
+function! SaveSess()
+	execute 'mksession! ' . getcwd() . '/' . g:session_filename
 endfunction
 
-fu! RestoreSess()
-if filereadable(getcwd() . '/' . g:session_filename)
-    execute 'so ' . getcwd() . '/' . g:session_filename
-    if bufexists(1)
-        for l in range(1, bufnr('$'))
-            if bufwinnr(l) == -1
-                exec 'sbuffer ' . l
-            endif
-        endfor
-    endif
-endif
-endfunction
-
-command! -nargs=0 Mksess :call SaveSess()
-command! -nargs=0 Resess :call RestoreSess()
-
-" --> Template Management
-
-function SourceTemplate()
-	let b:template = glob("${XDG_CONFIG_HOME:-$HOME/.config}/nvim/templates/_default." . expand('%:e'))
-	if !empty(b:template)
-		execute('0r' . b:template)
+function! RestoreSess()
+	execute 'so ' . getcwd() . '/' . g:session_filename
+	if bufexists(1)
+		for l in range(1, bufnr('$'))
+			if bufwinnr(l) == -1
+				exec 'sbuffer ' . l
+			endif
+		endfor
 	endif
 endfunction
 
-autocmd BufNewFile * call SourceTemplate()
+if argc() == 0 && filereadable(getcwd() . '/' . g:session_filename)
+	autocmd VimLeave * call SaveSess()
+	autocmd VimEnter * nested call RestoreSess()
+endif
+
+command! -nargs=0 Mksession :call SaveSess()
+
+
+" --> Template Management
+
+let g:templates_dir = "${XDG_CONFIG_HOME:-$HOME/.config}/nvim/templates"
+
+function ReadDefaultTemplate()
+	let b:default_template = glob(g:templates_dir . "/_default." . expand('%:e'))
+	if !empty(b:default_template)
+		execute('0r ' . b:default_template)
+	endif
+endfunction
+
+autocmd BufNewFile * call ReadDefaultTemplate()
+
+function ReadTemplate(template)
+	execute('r ' . a:template)
+endfunction
+
+function FzfTemplates()
+	call fzf#run(fzf#wrap({
+			\ 'source': 'find ' . g:templates_dir . '/' . &filetype . ' -mindepth 1',
+			\ 'sink': function('ReadTemplate'),
+			\ 'options': ['--delimiter', '/templates/' . &filetype . '/', '--with-nth', '2..'],
+			\ }))
+endfunction
+
+command -nargs=0 Templates call FzfTemplates()
+nnoremap <leader>t :Templates<CR>
+
+
+" --> Other commands
 
 autocmd TermOpen * startinsert
-command! -nargs=* TermSplit  split  | terminal <args>
-command! -nargs=* TermVSplit  vsplit  | terminal <args>
+command! -nargs=* TermSplit   split  | terminal <args>
+command! -nargs=* TermVSplit  vsplit | terminal <args>
 
-command! -nargs=* T  tabnew <args>
+command -nargs=* T tabnew <args>
+command Gi execute "tabnew" system('EDITOR=echo gi')
 
-" --> Bindings and configs
+
+" --> Bindings
 
 if !exists('g:lasttab')
   let g:lasttab = 1
@@ -194,24 +221,21 @@ autocmd FileType go inoremap ;ae err<Space>:=<Space><++><CR>if<Space>err<Space>!
 nnoremap <leader>fl :w<CR>:!dev lint "%"<CR>
 nnoremap <leader>fm :w<CR>:%!dev format "%"<CR>
 nnoremap <leader>fM :w<CR>:%!dev minify "%"<CR>
-nnoremap <leader>fc :w<CR>:!dev compile "%"<CR>
-nnoremap <leader>fe :w<CR>:!dev run "%"<CR>
-nnoremap <leader>ft :w<CR>:!dev test "%"<CR>
-nnoremap <leader>fb :w<CR>:!dev build "%"<CR>
+nnoremap <leader>fc :w<CR>:se nornu<CR>:!dev compile "%"<CR>:se rnu<CR>
+nnoremap <leader>fe :w<CR>:se nornu<CR>:!dev run "%"<CR>:se rnu<CR>
+nnoremap <leader>fa :w<CR>:se nornu<CR>:!dev test "%"<CR>:se rnu<CR>
+nnoremap <leader>fb :w<CR>:se nornu<CR>:!dev build "%"<CR>:se rnu<CR>
 nnoremap <leader>fr :w<CR>:!dev clean "%"<CR>
 
 nnoremap <leader>Fl :w<CR>:TermSplit dev lint "%"<CR>
 nnoremap <leader>Fm :w<CR>:TermSplit dev format "%"<CR>
-nnoremap <leader>Fc :w<CR>:TermSplit dev compile "%"<CR>
-nnoremap <leader>Fe :w<CR>:TermSplit dev run "%"<CR>
-nnoremap <leader>Ft :w<CR>:TermSplit dev test "%"<CR>
+nnoremap <leader>Fc :w<CR>:se nornu<CR>:TermSplit dev compile "%"<CR>
+nnoremap <leader>Fe :w<CR>:se nornu<CR>:TermSplit dev run "%"<CR>
+nnoremap <leader>Fb :w<CR>:se nornu<CR>:TermSplit dev build "%"<CR>
+nnoremap <leader>Fa :w<CR>:se nornu<CR>:TermSplit dev test "%"<CR>
 nnoremap <leader>Fr :w<CR>:TermSplit dev clean "%"<CR>
 
-nnoremap <leader>b :w<CR>:se nornu<CR>:!dev build "%"<CR>:se rnu<CR>
-nnoremap <leader>B :w<CR>:se nornu<CR>:TermSplit dev build "%"<CR>
-nnoremap <leader>t :w<CR>:se nornu<CR>:!dev test "%"<CR>:se rnu<CR>
-nnoremap <leader>T :w<CR>:se nornu<CR>:TermSplit dev test "%"<CR>
-
+nnoremap <leader>a :w<CR>:se nornu<CR>:!dev test "%"<CR>:se rnu<CR>
 nnoremap <leader>w :set wrap!<CR>
 nnoremap <leader>fo :!opout "%:p"<CR>
 nnoremap <leader><C-r> :source ~/.config/nvim/init.vim<CR>
@@ -219,6 +243,9 @@ nnoremap <leader>s :%s//gc<Left><Left><Left>
 
 nnoremap <leader>gc :TermSplit git add --all && git commit<CR>
 nnoremap <leader>gp :TermSplit gitpush<CR>
+
+
+" --> Update shortcuts
 
 let shortcuts = config_dir . "shortcuts.vim"
 if filereadable(shortcuts)

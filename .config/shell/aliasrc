@@ -8,7 +8,6 @@ alias md='mkdir'
 alias s='sudo'
 alias l='ls -A'
 alias ll='ls -al'
-alias lr='ls -aR'
 # open
 alias o="${OPENER:-xdg-open}"
 alias e="${EDITOR:-vi}"

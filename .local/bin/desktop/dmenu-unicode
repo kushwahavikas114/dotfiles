@@ -1,6 +1,6 @@
 #!/bin/sh
 
-chosen=$(cat ~/.local/share/chars/* | dmenu -i -l 25 -fn :size=20)
+chosen=$(cat ~/.local/share/chars/* | dmenu -i -l 25)
 
 [ -z "$chosen" ] && exit
 

@@ -14,15 +14,15 @@ export TERMINAL="st"
 export PREVIEWER="preview"
 
 export MOUNTPATH="/run/media/$USER"
-export PASSWORD_STORE_DIR="$HOME/Phone/Backup/pass"
+export CUSTOM_PASSWORD_STORE="$HOME/Phone/Backup/pass"
 export SSH_AUTH_SOCK="$HOME/.ssh/ssh_auth_sock"
 export NCFTPDIR="$XDG_DATA_HOME/ncftp"
 export R_ENVIRON_USER="$XDG_DATA_HOME/R/.Renviron"
 export GOPATH="$XDG_DATA_HOME/go"
 export ANDROID_USER_HOME="$XDG_DATA_HOME/android"
 export ANDROID_HOME="$HOME/Android/Sdk"
-export __GL_SHADER_DISK_CACHE_PATH="$HOME/.cache/nv"
 export PYENV_ROOT="$XDG_DATA_HOME/pyenv"
+export __GL_SHADER_DISK_CACHE_PATH="$HOME/.cache/nv"
 
 export XINITRC="$XDG_CONFIG_HOME/X11/xinitrc"
 export ZDOTDIR="$XDG_CONFIG_HOME/zsh"
@@ -50,6 +50,7 @@ export CD_HISTFILE="$XDG_STATE_HOME/cd_history"
 export LESS='-fiR --mouse --use-color -j 10 -Dd+r -Du+b'
 export LESSOPEN='|lessopen.sh %s'
 export GROFF_NO_SGR=1
+export SUDO_ASKPASS='/usr/lib/ssh/ssh-askpass'
 export GTK_IM_MODULE='fcitx'
 export QT_IM_MODULE='fcitx'
 export SDL_IM_MODULE='fcitx'
@@ -62,14 +63,14 @@ export CHROME_EXECUTABLE='chromium'
 export FZF_DEFAULT_COMMAND="find -H . ! -wholename '*.git*' ! \( -type d -printf '%p/\n' , ! -type d -print \)"
 export FZF_DEFAULT_OPTS="
 	--history='$FZF_HISTFILE'
-	--preview='\$PREVIEWER {}' --preview-window=hidden
+	--preview='\$PREVIEWER {}'
+	--preview-window='<30(up,border-bottom),right,border-left,hidden'
 	--bind 'ctrl-s:toggle-sort'
 	--bind 'ctrl-y:execute-silent(printf \"%s\\\n\" {+} | xsel --clipboard)'
 	--bind 'ctrl-v:toggle-preview,ctrl-space:toggle-preview'
 	--bind 'alt-space:toggle-preview,alt-w:toggle-preview-wrap'
-	--bind 'alt-enter:print-query'
 	--bind 'ctrl-alt-c:change-preview-window(up|left:50%|down|right:50%)'
-	--bind 'ctrl-alt-k:change-preview-window(50%|60%|70%|80%|90%)'
+	--bind 'ctrl-alt-k:change-preview-window(60%|70%|80%|90%)'
 	--bind 'ctrl-alt-j:change-preview-window(50%|40%|30%|20%)'
 	--bind 'ctrl-alt-a:select-all,ctrl-alt-d:deselect-all'
 	--bind 'alt-n:half-page-down,alt-p:half-page-up'
@@ -79,8 +80,6 @@ export FZF_DEFAULT_OPTS="
 	--bind 'alt-j:preview-half-page-down,alt-k:preview-half-page-up'
 	--bind 'alt-l:preview-page-down,alt-h:preview-page-up'
 	--bind 'alt-H:preview-top,alt-L:preview-bottom'
-	--bind 'alt-g:preview-top,alt-G:preview-bottom'
-	--bind 'alt-s:execute(dmenu-send {})'
 	--bind 'alt-0:change-preview(echo {})'
 	--bind 'alt-1:change-preview(text-preview {})'
 	--bind 'alt-2:change-preview(\$PREVIEWER {})'
@@ -92,7 +91,7 @@ export FZF_DEFAULT_OPTS="
 	--bind 'alt-e:execute(append-to-history {q} \"$FZF_HISTFILE\"; eval \"\${EDITOR:-vi} {}\")'
 	--bind 'alt-O:execute(append-to-history {q} \"$FZF_HISTFILE\"; mimeopen --ask {})'
 	--bind 'alt-o:execute(append-to-history {q} \"$FZF_HISTFILE\"; eval \"\${FILES:-lf} {}\")'
-	--bind 'alt-D:become(append-to-history {q} \"$FZF_HISTFILE\"; dirname {} )'
+	--bind 'alt-s:execute(append-to-history {q} \"$FZF_HISTFILE\"; fsend {} )'
 	"
 
 ## Custom themes for GTypist

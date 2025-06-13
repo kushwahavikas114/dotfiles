@@ -1,5 +1,7 @@
 #!/bin/sh
 
+[ -t 1 ] || exec "$TERMINAL" -e open "$@"
+
 [ -z "$1" ] && echo "USAGE: open <FILE>" >&2 && exit 1
 
 for file in "$@"; do
@@ -8,15 +10,15 @@ for file in "$@"; do
 		*.pdf|*.djvu|*.epub) setsid -f zathura "$file" 2>/dev/null ;;
 		*.png|*.jpg|*.jpeg|*.webp) setsid -f nsxiv "$file" ;;
 		*.gif|*.mkv|*.mp3|*.mp4|*.webm|*.ogg) ${PLAYER:-mpv --no-config --sub-auto=fuzzy} "$file" ;;
-		*.html) ${BROWSER:-w3m} "$file" ;;
+		*.html) ${BROWSER:-w3m --enable-mouse} "$file" ;;
 		*.pl.txt) fpl "$file" ;;
 		*.txt|*.description) ${PAGER:-less} "$file" ;;
-		*.md) glow --pager --width $(("$(tput cols)" - 5)) "$file" ;;
+		*.md) glow --pager --width $(($(tput cols) - 5)) "$file" ;;
 		*.css|*.json|*.ipynb|*.vim|*.lua|*.iso|*.zip) LESSOPEN="|preview %s" less -r "$file" ;;
 		*.srt) fzf-subtitles -o "$file" ;;
 		*.dig) setsid -f digital "$file" ;;
 		*.doc|*.docx|*.ppt|*.pptx) setsid -f libreoffice "$file" ;;
-		*.sc|*.xls|*.xlsx) sc-im "$file" ;;
+		*.sc|*.xls|*.xlsx) /usr/bin/sc-im "$file" ;;
 		*.sim1) simulide "$file" ;;
 		*.xz) ${EDITOR:-nvim} "$file" ;;
 
@@ -24,7 +26,7 @@ for file in "$@"; do
 			filetype="$(file --dereference --brief --mime-type "$file")"
 			case "$filetype" in
 				inode/directory) ${FILES:-lf} "$file" ; exit ;;
-				text/html*) ${BROWSER:-w3m} "$file" ;;
+				text/html*) ${BROWSER:-w3m --enable-mouse} "$file" ;;
 				*pdf|*djvu|*epub+zip|*oxps|*fictionbook) setsid -f zathura "$file" 2>/dev/null ;;
 				text/*|*json|*zip|*zstd|*javascript) "${EDITOR:-nvim}" "$file" ;;
 				application/vnd.openxmlformats-officedocument.*) setsid -f libreoffice "$file" ;;
@@ -42,8 +44,9 @@ for file in "$@"; do
 
 	esac
 
-	[ -z "$OPEN_HISTFILE" ] &&
+	[ -n "$OPEN_HISTFILE" ] ||
 		export OPEN_HISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/open_history"
+
 	file="$(realpath "$file")"
 	sed -i "\|^$file$|d" "$OPEN_HISTFILE"
 	echo "$file" >> "$OPEN_HISTFILE"

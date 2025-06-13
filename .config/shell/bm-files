@@ -4,25 +4,27 @@
 bf	${XDG_CONFIG_HOME:-$HOME/.config}/shell/bm-files
 bd	${XDG_CONFIG_HOME:-$HOME/.config}/shell/bm-dirs
 
-pf	~/.profile
-zp	~/.zprofile
-xp	~/.xprofile
-gi	~/.gitignore
-zr	${XDG_CONFIG_HOME:-$HOME/.config}/zsh/.zshrc
-ar	${XDG_CONFIG_HOME:-$HOME/.config}/shell/aliasrc
-lf	${XDG_CONFIG_HOME:-$HOME/.config}/lf/lfrc
-sx	${XDG_CONFIG_HOME:-$HOME/.config}/sxiv/exec/key-handler
-in	${XDG_CONFIG_HOME:-$HOME/.config}/nvim/init.vim
-ac	${XDG_CONFIG_HOME:-$HOME/.config}/alacritty/alacritty.toml
-xr	${XDG_CONFIG_HOME:-$HOME/.config}/X11/Xresources
-xi	${XDG_CONFIG_HOME:-$HOME/.config}/X11/xinitrc
-ml	${XDG_CONFIG_HOME:-$HOME/.config}/mimeapps.list
-fi	${XDG_CONFIG_HOME:-$HOME/.config}/fd/ignore
-sc	~/.ssh/config
+cfpf	~/.profile
+cfzp	~/.zprofile
+cfxp	~/.xprofile
+cfgi	~/.gitignore
+cfzc	${XDG_CONFIG_HOME:-$HOME/.config}/zsh/.zshrc
+cfar	${XDG_CONFIG_HOME:-$HOME/.config}/shell/aliasrc
+cflc	${XDG_CONFIG_HOME:-$HOME/.config}/lf/lfrc
+cfsx	${XDG_CONFIG_HOME:-$HOME/.config}/sxiv/exec/key-handler
+cfin	${XDG_CONFIG_HOME:-$HOME/.config}/nvim/init.vim
+cfac	${XDG_CONFIG_HOME:-$HOME/.config}/alacritty/alacritty.toml
+cfza	${XDG_CONFIG_HOME:-$HOME/.config}/zathura/zathurarc
+cfxr	${XDG_CONFIG_HOME:-$HOME/.config}/X11/Xresources
+cfxi	${XDG_CONFIG_HOME:-$HOME/.config}/X11/xinitrc
+cfml	${XDG_CONFIG_HOME:-$HOME/.config}/mimeapps.list
+cffi	${XDG_CONFIG_HOME:-$HOME/.config}/fd/ignore
+cfsc	~/.ssh/config
 
 zh	${XDG_STATE_HOME:-$HOME/.local/state}/zsh/history
 qn	${XDG_DOCUMENTS_HOME:-$HOME/Documents}/Notes/QuickNote.md
 bm	${XDG_DOCUMENTS_HOME:-$HOME/Documents}/Notes/bookmarks.txt
-akn	${XDG_DOCUMENTS_HOME:-$HOME/Documents}/Notes/ak47.txt
 li	${XDG_DOCUMENTS_HOME:-$HOME/Documents}/latex/lorem-ipsum.txt
 vh	~/Dev/sites/vikas.rocks/layouts/_default/home.html
+wtr	/tmp/wttr.txt
+

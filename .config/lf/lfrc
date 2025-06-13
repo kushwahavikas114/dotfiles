@@ -112,9 +112,9 @@ map <backtab> :toggle; up
 map Z :toggle; up
 map <c-j> select_eval "fzf --reverse --track --header-first --header='Jump to location' --query \"^${f##*/}$\" --bind 'load:change-query(!/$ )'"
 map <backspace> ${{ lf -remote "send $id select \"$(cat "${OPEN_HISTFILE:-${XDG_STATE_HOME:-$HOME/.local/state}/open_history}" |
-	fzf --reverse --tac --header-first --header='File History')\"" }}
+	fzf --reverse --tac --no-sort --header-first --header='File History')\"" }}
 map <c-k> ${{ lf -remote "send $id cd \"$(cat ${CD_HISTFILE:-${XDG_STATE_HOME:-$HOME/.local/state}/cd_history} |
-	fzf --reverse --tac --header-first --header='Path History')\"" }}
+	fzf --reverse --tac --no-sort --header-first --header='Path History')\"" }}
 map <c-c> select_eval "fzf --reverse --track --header-first --header='Jump to location' --query \"^${f##*/}/$\" --bind 'load:change-query(/$ )'"
 
 map d

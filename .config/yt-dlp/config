@@ -1,5 +1,5 @@
---output %(title)s.%(ext)s
 --restrict-filenames
+--output %(title)s.%(ext)s
 
 --format bestvideo*[height<=1080][fps<=30]+bestaudio
 --prefer-free-format

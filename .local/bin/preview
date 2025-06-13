@@ -6,8 +6,7 @@ if [ -d "$1" ]; then
 	else
 		ls -lhAF --group-directories-first --color=always -- "$1"
 	fi
-	readme="$(find "$1" -maxdepth 1 -name "README.*" | head -1)"
-	[ -z "$readme" ] || preview "$readme"
+	find "$1" -maxdepth 1 -iname "README*" | xargs -r preview
 	exit
 fi
 
@@ -18,8 +17,8 @@ case "$1" in
 	'') echo "USAGE: preview <FILE>" >&2; exit 1 ;;
 	*.html) w3m -dump "$1" ;;
 	*.md) glow "$1" ;;
-	# *.vim) highlight --syntax=vim --replace-tabs=2 -- "$1" ;;
-	*.js*|*.ts*|*.vim|*.lua) highlight --replace-tabs=2 -- "$1" ;;
+	*.vim) highlight --syntax=vim --replace-tabs=2 -- "$1" ;;
+	*.js*|*.ts*|*.lua) highlight --replace-tabs=2 -- "$1" ;;
 	*.txt|*.description|*.srt) cat -- "$1" ;;
 	*.png|*.jpg|*.jpeg|*.webp|*.mp3|*.ogg|*.mp4|*.mkv|*.webm) mediainfo -- "$1" ;;
 	*.info.json) jq -C . "$1" ;;
@@ -39,7 +38,6 @@ case "$1" in
 	*odt|*.ods|*.odp|*.sxw) odt2txt "$1" ;;
 	*.doc) catdoc "$1" ;;
 	*.docx) docx2txt "$1" - ;;
-	# *.csv) sed s/,/\\n/g "$1" ;;
 
 	*)
 		filetype=$(file --dereference --brief --mime-type "$1")

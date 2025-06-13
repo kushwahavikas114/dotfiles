@@ -47,7 +47,7 @@ for battery in /sys/class/power_supply/BAT?*; do
 		*) exit 1 ;;
 	esac
 	# Will make a warn variable if discharging and low
-	[ "$status" = "Discharging" ] && [ "$capacity" -le 25 ] && warn="❗"
+	[ "$status" = "Discharging" ] && [ "$capacity" -lt 30 ] && warn="❗"
 	# Prints the info
 	printf "%s%s %d%%" "$warn" "$icon" "$capacity"; unset warn
 done && printf "\\n"
@@ -55,11 +55,11 @@ done && printf "\\n"
 echo
 if [ $capacity -ge 80 ]; then
 	echo "$BLOCK_COLOR_LEVEL1"
-elif [ $capacity -ge 40 ]; then
+elif [ $capacity -ge 60 ]; then
 	echo "$BLOCK_COLOR_LEVEL2"
-elif [ $capacity -ge 20 ]; then
+elif [ $capacity -ge 40 ]; then
 	echo "$BLOCK_COLOR_LEVEL3"
-elif [ $capacity -ge 10 ]; then
+elif [ $capacity -ge 20 ]; then
 	echo "$BLOCK_COLOR_LEVEL4"
 else
 	echo "$BLOCK_COLOR_LEVEL5"

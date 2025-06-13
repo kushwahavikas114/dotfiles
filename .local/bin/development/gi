@@ -1,0 +1,8 @@
+#!/bin/sh
+
+# gi (git-ignore) - open current repo's gitingore file in $EDITOR
+
+[ -f .gitignore ] && { ${EDITOR:-nvim -p} .gitignore; exit; }
+
+TOPLEVEL="$(git rev-parse --show-toplevel)" || exit
+find "$TOPLEVEL" -name ".gitignore" | xargs -r ${EDITOR:-nvim -p}

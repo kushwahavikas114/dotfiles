@@ -1,0 +1,6 @@
+#!/bin/sh
+
+[ -n "$OPEN_HISTFILE" ] ||
+	export OPEN_HISTFILE="${XDG_STATE_HOME:-$HOME/.local/state}/open_history"
+
+tac "$OPEN_HISTFILE" | dmenu -i -l 30 | xargs -I{} "${OPENER:-xdg-open}" "{}"

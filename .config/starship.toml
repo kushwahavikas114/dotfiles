@@ -35,6 +35,9 @@ min_time = 50
 format = "took [$duration]($style)"
 disabled = false
 
+[line_break]
+disabled = true
+
 
 ## SECOND LINE/ROW: Prompt
 # Somethere at the beginning
@@ -47,24 +50,21 @@ disabled = true
 [[battery.display]]  # "bold red" style when capacity is between 0% and 10%
 threshold = 15
 style = "bold red"
-disabled = true
 
 [[battery.display]]  # "bold yellow" style when capacity is between 10% and 30%
 threshold = 50
 style = "bold yellow"
-disabled = true
 
 [[battery.display]]  # "bold green" style when capacity is between 10% and 30%
 threshold = 80
 style = "bold green"
-disabled = true
 
 # Prompt: optional param 1
 [time]
-format = " 🕙 $time($style)\n"
+format = "    [󱑋 $time]($style)\n"
 time_format = "%T"
-style = "bright-white"
-disabled = true
+style = "#aaaa33"
+disabled = false
 
 # # Prompt: param 2 └─
 # [character]

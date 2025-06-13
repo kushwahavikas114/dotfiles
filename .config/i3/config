@@ -18,6 +18,7 @@
 # exec --no-startup-id pasystray
 
 exec st -c dropdown_tmuxdd -e tmux new -A -s ddterm
+exec sh -c "sleep 1 && i3-msg scratchpad show"
 
 ################################
 ### Commonly Used Variables: ###
@@ -26,11 +27,6 @@ exec st -c dropdown_tmuxdd -e tmux new -A -s ddterm
 # - For Keybindings search: Commonly Used Keybindings in this document
 # - Make sure that you give the absolute path to the binary / program / executable
 # - You may specify any additional arguments required by the binary / executable
-
-### Wallpaper: ###
-# - You need to specify homescreen wallpaper using azote
-set $lockScreenWallpaper '/usr/share/wallpapers/garuda-wallpapers/Garuda-Desert.png'
-set $homeScreenWallpaper '/usr/share/wallpapers/garuda-wallpapers/background.jpg'
 
 ### Applications: ###
 set $preferredTerminalEmulator    $TERMINAL
@@ -50,6 +46,7 @@ set $right l
 set $super Mod4
 set $alt Mod1
 
+set $passmenu '$PASSWORD_STORE_DIR=$HOME/Phone/Backup/pass passmenu'
 
 
 
@@ -59,11 +56,13 @@ set $alt Mod1
 
 bindsym $super+F2 exec --no-startup-id dmenu-unicode
 bindsym $super+Shift+F2 exec --no-startup-id dmenu-unicode get-code
-bindsym $super+F3 exec --no-startup-id st -c "dropdown_sender" -e fsend
-bindsym $super+F4 exec --no-startup-id passmenu
-bindsym $super+Shift+F4 exec --no-startup-id passmenu --type
+bindsym $super+F3 exec --no-startup-id dmenu-file-history
+bindsym $super+F4 exec --no-startup-id $passmenu
+bindsym $super+Shift+F4 exec --no-startup-id $passmenu --type
 bindsym $super+F5 exec --no-startup-id dmenu-zeal
+bindsym $super+F6 exec --no-startup-id st -c "dropdown_sender" -e fsend
 bindsym $super+F7 exec --no-startup-id sh -c 'find ~/.librewolf -mindepth 1 -maxdepth 1 -type d -name '????????.*' -printf "%f\n" | cut -d. -f2- | dmenu -p "LibreWolf Profile" | xargs -I{} setsid -f librewolf -P "{}"'
+bindsym $super+F8 exec --no-startup-id sh -c 'yth dmenu | xclip -in -sel clip'
 bindsym $super+b exec --no-startup-id librewolf-open
 bindsym $super+c exec --no-startup-id edit-graphical-buffer
 bindsym $super+x exec --no-startup-id toggle-xeyes
@@ -100,6 +99,7 @@ bindsym Ctrl+Print exec --no-startup-id $preferredScreenCaptureTool
 # - $TERMINAL & xfce4-terminal can also be started using their individual keybindings
 
 bindsym $super+Return exec --no-startup-id $preferredTerminalEmulator
+bindsym $super+Shift+Return exec --no-startup-id sh -c 'cd "$(tail -1 $CD_HISTFILE)" && $TERMINAL'
 bindsym $super+t exec --no-startup-id xfce4-terminal
 bindsym $super+Shift+t exec --no-startup-id notify-send Temprature "$(sensors --no-adapter coretemp-isa-0000 | tail +2 | sed "s|(.*)||")"
 
@@ -169,13 +169,13 @@ bindsym $super+Ctrl+Left   exec $brightnessDown
 
 bindsym $super+Ctrl+Up     exec --no-startup-id $raiseVolume
 bindsym $super+Ctrl+Down   exec --no-startup-id $lowerVolume
-bindsym $super+Ctrl+Insert   exec --no-startup-id $muteOutput
-bindsym $super+Ctrl+Del exec --no-startup-id $muteInput
+bindsym $super+Ctrl+Home   exec --no-startup-id volctl toggle
+bindsym $super+Ctrl+End    exec --no-startup-id $muteInput
 
 bindsym $super+Ctrl+Next   exec $nextAudio
 bindsym $super+Ctrl+Prior  exec $prevAudio
-bindsym $super+Ctrl+Home   exec $playAudio
-bindsym $super+Ctrl+End    exec $stopAudio
+# bindsym $super+Ctrl+Home   exec $playAudio
+# bindsym $super+Ctrl+End    exec $stopAudio
 
 
 # bindsym XF86TouchpadToggle exec ~/bin/toggletouchpad.sh
@@ -285,15 +285,10 @@ bindsym $super+Shift+Right  move right
 ##################
 
 # navigate workspaces
-bindsym $super+bracketleft      workspace $ws1
 bindsym $super+n                workspace next
 bindsym $super+p            		workspace prev
-bindsym $super+bracketright     workspace $ws10
-
-bindsym $super+Home			        workspace $ws1
 bindsym $super+Prior	        	workspace prev
 bindsym $super+Next			        workspace next
-bindsym $super+End              workspace $ws10
 
 bindsym $super+Tab	        	  workspace back_and_forth
 bindsym $super+Shift+Tab        move container to workspace back_and_forth; workspace back_and_forth
@@ -468,6 +463,7 @@ for_window [window_type='dialog'] move position center
 for_window [title="Android Emulator - *"] floating enable border none sticky enable
 for_window [title="Emulator"] floating enable border none sticky enable
 for_window [class="mpv"] floating enable
+for_window [class="flameshot"] floating enable
 # for_window [class="Zeal"] floating enable move position below
 
 # #---Dropdown Windows---# #
@@ -644,6 +640,6 @@ mode "$mode_system" {
 # TODO: create your own i3exit script as ?syst-power
 
 # Lock screen
-bindsym $super+Escape exec i3lock -t -i $lockScreenWallpaper
+bindsym $super+Escape exec i3exit lock
 
 # exec_always xrandr --output eDP-1-1-1 --auto --primary
